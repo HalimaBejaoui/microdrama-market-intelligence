@@ -1,0 +1,48 @@
+relationship Fact_MarketQuarter_Date
+	fromColumn: Fact_MarketQuarter.Date
+	toColumn: Date.Date
+
+relationship Fact_AIReleaseShare_Date
+	fromColumn: Fact_AIReleaseShare.Date
+	toColumn: Date.Date
+
+relationship Fact_AppMonthly_Date
+	fromColumn: Fact_AppMonthly.Date
+	toColumn: Date.Date
+
+relationship Fact_MarketSize_Date
+	fromColumn: Fact_MarketSize.Date
+	toColumn: Date.Date
+
+relationship Fact_AppMonthly_Dim_App
+	fromColumn: Fact_AppMonthly.App
+	toColumn: Dim_App.App
+
+relationship Fact_AppScorecard_Dim_App
+	fromColumn: Fact_AppScorecard.App
+	toColumn: Dim_App.App
+
+relationship Fact_Pricing_Dim_App
+	fromColumn: Fact_Pricing.App
+	toColumn: Dim_App.App
+
+relationship Fact_Paywall_Dim_App
+	fromColumn: Fact_Paywall.App
+	toColumn: Dim_App.App
+
+relationship Fact_RegionPerformance_Dim_Region
+	fromColumn: Fact_RegionPerformance.Region
+	toColumn: Dim_Region.Region
+
+relationship Fact_CostPerInstall_Dim_MarketingRegion
+	fromColumn: Fact_CostPerInstall.'Marketing Region'
+	toColumn: Dim_MarketingRegion.'Marketing Region'
+
+relationship Fact_ContentBenchmark_Dim_ContentType
+	fromColumn: Fact_ContentBenchmark.'Content Type'
+	toColumn: Dim_ContentType.'Content Type'
+
+relationship Fact_ContentShare_Dim_ContentType
+	fromColumn: Fact_ContentShare.'Content Type'
+	toColumn: Dim_ContentType.'Content Type'
+

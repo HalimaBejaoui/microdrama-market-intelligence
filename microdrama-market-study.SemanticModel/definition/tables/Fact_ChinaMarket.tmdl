@@ -1,0 +1,51 @@
+/// China market size including comic dramas, with the free (ad-funded) part, USD billion at 7.2 CNY per USD. DataEye; 2026E is an estimate.
+table Fact_ChinaMarket
+	lineageTag: 72e20137-e481-5079-b42a-440242fb19d0
+
+	column Year
+		dataType: string
+		lineageTag: 4e414650-9e7c-5c07-84bf-60a7fbc9cc26
+		summarizeBy: none
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = User
+
+	column 'Total USD B'
+		dataType: double
+		isHidden
+		lineageTag: be9d98e7-7e44-5f19-8cd9-e61991caa11d
+		summarizeBy: none
+		sourceColumn: Total USD B
+
+		annotation SummarizationSetBy = User
+
+	column 'Free USD B'
+		dataType: double
+		isHidden
+		lineageTag: 114a5c69-ad3f-5a2e-8542-7edc2bb9ff41
+		summarizeBy: none
+		sourceColumn: Free USD B
+
+		annotation SummarizationSetBy = User
+
+	column 'Paid USD B'
+		dataType: double
+		isHidden
+		lineageTag: 6d26ffc3-f599-5188-bcc0-76f91a594c2f
+		summarizeBy: none
+		sourceColumn: Paid USD B
+
+		annotation SummarizationSetBy = User
+
+	partition Fact_ChinaMarket = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "Fact_ChinaMarket.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"Year", type text}, {"Total USD B", type number}, {"Free USD B", type number}, {"Paid USD B", type number}}, "en-US")
+				in
+				    Typed
+
+		annotation PBI_ResultType = Table
+

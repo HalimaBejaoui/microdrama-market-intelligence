@@ -1,0 +1,33 @@
+/// China microdrama viewers, million. DataEye.
+table Fact_ChinaUsers
+	lineageTag: 456ef3e7-0d9f-5136-9047-0ea2955705ab
+
+	column Period
+		dataType: string
+		lineageTag: 8ab3f53b-255e-522e-bc68-7d759c158f4d
+		summarizeBy: none
+		sourceColumn: Period
+
+		annotation SummarizationSetBy = User
+
+	column 'Users M'
+		dataType: double
+		isHidden
+		lineageTag: fc9d2429-c554-544b-bf5b-19ae10559a9d
+		summarizeBy: none
+		sourceColumn: Users M
+
+		annotation SummarizationSetBy = User
+
+	partition Fact_ChinaUsers = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "Fact_ChinaUsers.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"Period", type text}, {"Users M", type number}}, "en-US")
+				in
+				    Typed
+
+		annotation PBI_ResultType = Table
+

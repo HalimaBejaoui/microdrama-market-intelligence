@@ -1,0 +1,6 @@
+/// Folder that holds the model-ready CSV files.
+expression DataFolder = "C:\my projects\microdrama-market-study\data\gold\" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 21d1317a-f053-5a5a-a736-d39751f9a2a8
+
+	annotation PBI_ResultType = Text
+

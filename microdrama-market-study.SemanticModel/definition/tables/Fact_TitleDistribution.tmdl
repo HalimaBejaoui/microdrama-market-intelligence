@@ -1,0 +1,43 @@
+/// Cumulative share of China titles by paid-promotion index band, 2025. DataEye.
+table Fact_TitleDistribution
+	lineageTag: 81cdee62-8e61-53d7-9a82-b84782957491
+
+	column Band
+		dataType: string
+		lineageTag: 909a0186-43ec-5618-b8db-a6a7f1e445ce
+		summarizeBy: none
+		sourceColumn: Band
+		sortByColumn: 'Band Order'
+
+		annotation SummarizationSetBy = User
+
+	column 'Band Order'
+		dataType: int64
+		isHidden
+		lineageTag: 8198ff54-d783-5de6-a455-f641e6b1e58e
+		summarizeBy: none
+		sourceColumn: Band Order
+
+		annotation SummarizationSetBy = User
+
+	column Share
+		dataType: double
+		isHidden
+		lineageTag: 6f977328-3cbc-5af5-9b3b-863204a05003
+		summarizeBy: none
+		sourceColumn: Share
+
+		annotation SummarizationSetBy = User
+
+	partition Fact_TitleDistribution = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "Fact_TitleDistribution.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"Band", type text}, {"Band Order", Int64.Type}, {"Share", type number}}, "en-US")
+				in
+				    Typed
+
+		annotation PBI_ResultType = Table
+

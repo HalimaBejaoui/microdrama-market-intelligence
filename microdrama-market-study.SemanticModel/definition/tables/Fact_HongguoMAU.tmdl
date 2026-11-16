@@ -1,0 +1,33 @@
+/// Monthly active users of Hongguo, ByteDance's free microdrama app, million. DataEye.
+table Fact_HongguoMAU
+	lineageTag: 0784090b-2ab6-59a6-825e-2460408d1f72
+
+	column Month
+		dataType: string
+		lineageTag: 0b27017f-9aaa-524a-9969-fbcb6a747c7a
+		summarizeBy: none
+		sourceColumn: Month
+
+		annotation SummarizationSetBy = User
+
+	column 'MAU M'
+		dataType: double
+		isHidden
+		lineageTag: 7aba18c4-5157-5c81-843c-0c85bb1e3f92
+		summarizeBy: none
+		sourceColumn: MAU M
+
+		annotation SummarizationSetBy = User
+
+	partition Fact_HongguoMAU = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "Fact_HongguoMAU.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"Month", type text}, {"MAU M", type number}}, "en-US")
+				in
+				    Typed
+
+		annotation PBI_ResultType = Table
+

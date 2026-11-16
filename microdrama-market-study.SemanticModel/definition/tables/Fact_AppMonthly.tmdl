@@ -1,0 +1,44 @@
+/// Monthly in-app revenue of the top three apps, 2025. DianDian.
+table Fact_AppMonthly
+	lineageTag: f0a880fe-3b13-571b-ad27-2958c476728f
+
+	column Date
+		dataType: dateTime
+		isHidden
+		formatString: yyyy-mm-dd
+		lineageTag: 9b8e1caf-a90d-51a9-8e78-4f8f30478d82
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = User
+
+	column App
+		dataType: string
+		isHidden
+		lineageTag: 3b6e9cba-52c2-511a-86d8-bd7bca302a7a
+		summarizeBy: none
+		sourceColumn: App
+
+		annotation SummarizationSetBy = User
+
+	column 'Revenue USD M'
+		dataType: double
+		isHidden
+		lineageTag: 539a8b49-1985-5f69-b8a7-3a065934c5ce
+		summarizeBy: none
+		sourceColumn: Revenue USD M
+
+		annotation SummarizationSetBy = User
+
+	partition Fact_AppMonthly = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "Fact_AppMonthly.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"Date", type date}, {"App", type text}, {"Revenue USD M", type number}}, "en-US")
+				in
+				    Typed
+
+		annotation PBI_ResultType = Table
+

@@ -1,0 +1,10 @@
+Content Type,Metric,Unit,Low,High
+Locally Made,Completion Rate,Rate,0.45,0.6
+Dubbed,Completion Rate,Rate,0.25,0.35
+Locally Made,Payer Conversion,Rate,0.08,0.12
+Dubbed,Payer Conversion,Rate,0.03,0.05
+Locally Made,7-Day Retention,Rate,0.35,0.45
+Dubbed,7-Day Retention,Rate,0.15,0.25
+Locally Made,ARPU,USD,25.0,40.0
+Dubbed,ARPU,USD,10.0,20.0
+Locally Made,ROI Multiple,Multiple,2.5,2.5

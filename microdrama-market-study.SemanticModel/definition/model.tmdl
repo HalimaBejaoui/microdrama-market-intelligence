@@ -1,0 +1,52 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	valueFilterBehavior: independent
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_QueryOrder = ["DataFolder", "Dim_App", "Dim_Region", "Dim_MarketingRegion", "Dim_ContentType", "Fact_MarketQuarter", "Fact_RegionPerformance", "Fact_CostPerInstall", "Fact_BenchmarkMix", "Fact_ContentBenchmark", "Fact_ContentShare", "Fact_Genre", "Fact_FormatCost", "Fact_AIReleaseShare", "Fact_Audience", "Fact_AppScorecard", "Fact_AppMonthly", "Fact_Pricing", "Fact_Paywall", "Fact_Operator", "Fact_MarketSize", "Fact_ContinentPerformance", "Fact_OverseasYear", "Fact_ChinaMarket", "Fact_ChinaComparison", "Fact_ChinaUsers", "Fact_AppCountry", "Fact_MenaGrowth", "Fact_HongguoMAU", "Fact_TitleDistribution", "Fact_ChinaAudience"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table Dim_App
+ref table Dim_Region
+ref table Dim_MarketingRegion
+ref table Dim_ContentType
+ref table Fact_MarketQuarter
+ref table Fact_RegionPerformance
+ref table Fact_CostPerInstall
+ref table Fact_BenchmarkMix
+ref table Fact_ContentBenchmark
+ref table Fact_ContentShare
+ref table Fact_Genre
+ref table Fact_FormatCost
+ref table Fact_AIReleaseShare
+ref table Fact_Audience
+ref table Fact_AppScorecard
+ref table Fact_AppMonthly
+ref table Fact_Pricing
+ref table Fact_Paywall
+ref table Fact_Operator
+ref table Fact_MarketSize
+ref table Date
+ref table _Measures
+ref table 'Production Cost'
+ref table 'ARPU Adjustment'
+ref table Fact_ContinentPerformance
+ref table Fact_OverseasYear
+ref table Fact_ChinaMarket
+ref table Fact_ChinaComparison
+ref table Fact_ChinaUsers
+ref table Fact_AppCountry
+ref table Fact_MenaGrowth
+ref table Fact_HongguoMAU
+ref table Fact_TitleDistribution
+ref table Fact_ChinaAudience
+
+ref cultureInfo en-US
+

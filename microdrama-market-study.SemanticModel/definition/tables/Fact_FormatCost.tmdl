@@ -1,0 +1,51 @@
+/// Production cost range per series by format, USD thousand.
+table Fact_FormatCost
+	lineageTag: f49e761b-276f-5d2b-9492-cdddd7aa8156
+
+	column Format
+		dataType: string
+		lineageTag: 04f71250-d830-5607-9081-5a8f318ab27b
+		summarizeBy: none
+		sourceColumn: Format
+
+		annotation SummarizationSetBy = User
+
+	column 'Low USD K'
+		dataType: double
+		isHidden
+		lineageTag: 5d9a6928-e59c-5ab6-9851-72cde8d2a360
+		summarizeBy: none
+		sourceColumn: Low USD K
+
+		annotation SummarizationSetBy = User
+
+	column 'High USD K'
+		dataType: double
+		isHidden
+		lineageTag: 34a2885b-da6d-552c-b309-2a9f9daaaaba
+		summarizeBy: none
+		sourceColumn: High USD K
+
+		annotation SummarizationSetBy = User
+
+	column Source
+		dataType: string
+		isHidden
+		lineageTag: c5a0abaf-b1b1-5b9d-936d-51ffec927c41
+		summarizeBy: none
+		sourceColumn: Source
+
+		annotation SummarizationSetBy = User
+
+	partition Fact_FormatCost = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "Fact_FormatCost.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"Format", type text}, {"Low USD K", type number}, {"High USD K", type number}, {"Source", type text}}, "en-US")
+				in
+				    Typed
+
+		annotation PBI_ResultType = Table
+

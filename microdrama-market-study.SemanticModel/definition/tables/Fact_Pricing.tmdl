@@ -1,0 +1,52 @@
+/// VIP plan prices and cost per episode, observed 2026-11-08 on public web pages.
+table Fact_Pricing
+	lineageTag: a7a472cb-c4d8-52ed-aacc-8717803b0e10
+
+	column App
+		dataType: string
+		isHidden
+		lineageTag: 25e6f8a4-3b96-54ee-a5bc-2cba4a252839
+		summarizeBy: none
+		sourceColumn: App
+
+		annotation SummarizationSetBy = User
+
+	column Plan
+		dataType: string
+		lineageTag: aa6d4a38-2ec0-5162-aa2e-2017a69542a5
+		summarizeBy: none
+		sourceColumn: Plan
+		sortByColumn: 'Plan Order'
+
+		annotation SummarizationSetBy = User
+
+	column 'Plan Order'
+		dataType: int64
+		isHidden
+		lineageTag: 56d8e136-da5f-57d4-aafd-d53c84cb0ad5
+		summarizeBy: none
+		sourceColumn: Plan Order
+
+		annotation SummarizationSetBy = User
+
+	column 'Price USD'
+		dataType: double
+		isHidden
+		lineageTag: b2796449-2cae-5792-86e5-56aba52e64b5
+		summarizeBy: none
+		sourceColumn: Price USD
+
+		annotation SummarizationSetBy = User
+
+	partition Fact_Pricing = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "Fact_Pricing.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"App", type text}, {"Plan", type text}, {"Plan Order", Int64.Type}, {"Price USD", type number}}, "en-US")
+				in
+				    Typed
+
+		annotation PBI_ResultType = Table
+

@@ -1,0 +1,33 @@
+/// In-app revenue growth in Middle East markets, 2025. DianDian.
+table Fact_MenaGrowth
+	lineageTag: 7e649c3e-73af-5045-a5d8-b4f69cfed0b7
+
+	column Label
+		dataType: string
+		lineageTag: 2c5e0ea2-7359-586d-8d90-3ab25f405db0
+		summarizeBy: none
+		sourceColumn: Label
+
+		annotation SummarizationSetBy = User
+
+	column Growth
+		dataType: double
+		isHidden
+		lineageTag: 5222dfa9-6840-552e-a05a-aa14501a1f12
+		summarizeBy: none
+		sourceColumn: Growth
+
+		annotation SummarizationSetBy = User
+
+	partition Fact_MenaGrowth = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "Fact_MenaGrowth.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"Label", type text}, {"Growth", type number}}, "en-US")
+				in
+				    Typed
+
+		annotation PBI_ResultType = Table
+

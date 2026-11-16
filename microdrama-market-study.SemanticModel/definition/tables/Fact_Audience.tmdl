@@ -1,0 +1,42 @@
+/// Gender split of the top five apps by MAU per market, Q1 2026. Sensor Tower.
+table Fact_Audience
+	lineageTag: c7c0ecc9-ec0d-50ec-8dcd-46e38bc3cc3d
+
+	column Market
+		dataType: string
+		lineageTag: cf37025a-dd8f-5979-bff5-c68f4c74d684
+		summarizeBy: none
+		sourceColumn: Market
+
+		annotation SummarizationSetBy = User
+
+	column Female
+		dataType: double
+		isHidden
+		lineageTag: 5cb368d7-6adc-5aa0-9938-d8704d517692
+		summarizeBy: none
+		sourceColumn: Female
+
+		annotation SummarizationSetBy = User
+
+	column Male
+		dataType: double
+		isHidden
+		lineageTag: 231539ec-6695-5fd8-a3e2-cdea7c668ba9
+		summarizeBy: none
+		sourceColumn: Male
+
+		annotation SummarizationSetBy = User
+
+	partition Fact_Audience = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "Fact_Audience.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"Market", type text}, {"Female", type number}, {"Male", type number}}, "en-US")
+				in
+				    Typed
+
+		annotation PBI_ResultType = Table
+

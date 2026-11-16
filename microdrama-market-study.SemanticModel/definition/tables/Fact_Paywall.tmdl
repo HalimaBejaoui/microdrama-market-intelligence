@@ -1,0 +1,51 @@
+/// Free and total episodes per sampled title, observed 2026-11-08.
+table Fact_Paywall
+	lineageTag: 7a29c6b2-976a-5a3e-8290-358c6a00fa1c
+
+	column App
+		dataType: string
+		isHidden
+		lineageTag: 9ec4b3e9-4816-5b7f-91ee-470b76b646c9
+		summarizeBy: none
+		sourceColumn: App
+
+		annotation SummarizationSetBy = User
+
+	column Title
+		dataType: string
+		lineageTag: 15812e3e-c528-559a-8f1a-d48023d0d712
+		summarizeBy: none
+		sourceColumn: Title
+
+		annotation SummarizationSetBy = User
+
+	column 'Free Episodes'
+		dataType: int64
+		isHidden
+		lineageTag: ec7dc51e-06bf-5f02-a20b-c740ca85adc7
+		summarizeBy: none
+		sourceColumn: Free Episodes
+
+		annotation SummarizationSetBy = User
+
+	column 'Total Episodes'
+		dataType: int64
+		isHidden
+		lineageTag: 55097d56-511e-55fe-9a2b-32921bdb159f
+		summarizeBy: none
+		sourceColumn: Total Episodes
+
+		annotation SummarizationSetBy = User
+
+	partition Fact_Paywall = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "Fact_Paywall.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"App", type text}, {"Title", type text}, {"Free Episodes", Int64.Type}, {"Total Episodes", Int64.Type}}, "en-US")
+				in
+				    Typed
+
+		annotation PBI_ResultType = Table
+

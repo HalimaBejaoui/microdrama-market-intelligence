@@ -1,0 +1,61 @@
+/// In-app revenue and downloads by market, Q1 2026, derived from Sensor Tower shares of the stated totals.
+table Fact_RegionPerformance
+	lineageTag: cca26b12-06a6-5211-aa48-137f8de6965d
+
+	column Region
+		dataType: string
+		isHidden
+		lineageTag: a43f376c-d7a5-5b39-9ab4-e8c036b176a5
+		summarizeBy: none
+		sourceColumn: Region
+
+		annotation SummarizationSetBy = User
+
+	column 'Revenue USD M'
+		dataType: double
+		isHidden
+		lineageTag: 0dd0ab87-9054-5568-9900-55c328687148
+		summarizeBy: none
+		sourceColumn: Revenue USD M
+
+		annotation SummarizationSetBy = User
+
+	column 'Revenue PY USD M'
+		dataType: double
+		isHidden
+		lineageTag: f01b3095-184f-5bf7-b2e1-8a2366851764
+		summarizeBy: none
+		sourceColumn: Revenue PY USD M
+
+		annotation SummarizationSetBy = User
+
+	column 'Downloads M'
+		dataType: double
+		isHidden
+		lineageTag: b0200b2e-6401-59fb-a827-4f695ce6a308
+		summarizeBy: none
+		sourceColumn: Downloads M
+
+		annotation SummarizationSetBy = User
+
+	column 'Downloads PY M'
+		dataType: double
+		isHidden
+		lineageTag: cc691da0-977e-5daf-ac30-a67c9b7ec6e6
+		summarizeBy: none
+		sourceColumn: Downloads PY M
+
+		annotation SummarizationSetBy = User
+
+	partition Fact_RegionPerformance = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "Fact_RegionPerformance.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"Region", type text}, {"Revenue USD M", type number}, {"Revenue PY USD M", type number}, {"Downloads M", type number}, {"Downloads PY M", type number}}, "en-US")
+				in
+				    Typed
+
+		annotation PBI_ResultType = Table
+

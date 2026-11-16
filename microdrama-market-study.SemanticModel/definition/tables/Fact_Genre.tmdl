@@ -1,0 +1,42 @@
+/// Paid-promotion index and title count by genre, China, 2025. DataEye. Genre tags overlap, so never add them up.
+table Fact_Genre
+	lineageTag: 4feb1857-32a6-548e-b9c5-58be10756fb8
+
+	column Genre
+		dataType: string
+		lineageTag: 90e50ce5-9398-506d-95c1-849cb4316fad
+		summarizeBy: none
+		sourceColumn: Genre
+
+		annotation SummarizationSetBy = User
+
+	column Heat
+		dataType: double
+		isHidden
+		lineageTag: a5588fb7-ebd0-5fe1-8f4b-1eeac4ec4ea9
+		summarizeBy: none
+		sourceColumn: Heat
+
+		annotation SummarizationSetBy = User
+
+	column Titles
+		dataType: int64
+		isHidden
+		lineageTag: 07a6ee48-d472-5c70-a88f-229318ffd4b0
+		summarizeBy: none
+		sourceColumn: Titles
+
+		annotation SummarizationSetBy = User
+
+	partition Fact_Genre = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "Fact_Genre.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"Genre", type text}, {"Heat", type number}, {"Titles", Int64.Type}}, "en-US")
+				in
+				    Typed
+
+		annotation PBI_ResultType = Table
+

@@ -1,0 +1,728 @@
+/// Home of every report measure, grouped in numbered display folders.
+table _Measures
+	lineageTag: 90c852bc-cc55-5261-9b39-18f72eb2812d
+
+	/// Global in-app revenue, USD million. Sensor Tower.
+	measure 'IAP Revenue' = SUM ( Fact_MarketQuarter[IAP Revenue USD M] )
+		formatString: \$#,0"M"
+		displayFolder: 01 Market
+		lineageTag: 88b63382-c2e0-579b-831c-20b7bd56412f
+
+	/// Global downloads, million. Sensor Tower.
+	measure Downloads = SUM ( Fact_MarketQuarter[Downloads M] )
+		formatString: #,0"M"
+		displayFolder: 01 Market
+		lineageTag: 7f669022-69b7-55d6-83ea-e6917c197a34
+
+	/// In-app revenue divided by downloads.
+	measure 'Revenue per Download' = DIVIDE ( [IAP Revenue], [Downloads] )
+		formatString: \$#,0.00
+		displayFolder: 01 Market
+		lineageTag: afc7b2d9-ae0b-5215-a664-5201597e0e21
+
+	/// First day of the latest quarter with market data.
+	measure 'Latest Quarter Date' = CALCULATE ( MAX ( Fact_MarketQuarter[Date] ), REMOVEFILTERS () )
+		formatString: dd mmm yyyy
+		isHidden
+		displayFolder: 01 Market
+		lineageTag: 91ae40c8-172c-5e06-8222-f5c6628d76fa
+
+	/// In-app revenue in the latest quarter.
+	measure 'Latest IAP Revenue' = VAR D = [Latest Quarter Date] RETURN CALCULATE ( [IAP Revenue], REMOVEFILTERS ( 'Date' ), Fact_MarketQuarter[Date] = D )
+		formatString: \$#,0"M"
+		displayFolder: 01 Market
+		lineageTag: 20545fc2-6d4c-5bd5-a658-4ea25ad33443
+
+	/// Downloads in the latest quarter.
+	measure 'Latest Downloads' = VAR D = [Latest Quarter Date] RETURN CALCULATE ( [Downloads], REMOVEFILTERS ( 'Date' ), Fact_MarketQuarter[Date] = D )
+		formatString: #,0"M"
+		displayFolder: 01 Market
+		lineageTag: 1149170e-8c28-50ce-ba0e-bddf778c5726
+
+	/// Revenue per download in the latest quarter.
+	measure 'Latest Revenue per Download' = DIVIDE ( [Latest IAP Revenue], [Latest Downloads] )
+		formatString: \$#,0.00
+		displayFolder: 01 Market
+		lineageTag: fc606164-83a4-5080-aa7c-926a1c5861f3
+
+	/// In-app revenue in the same quarter a year earlier.
+	measure 'Year-Ago IAP Revenue' = VAR D = EDATE ( [Latest Quarter Date], -12 ) RETURN CALCULATE ( [IAP Revenue], REMOVEFILTERS ( 'Date' ), Fact_MarketQuarter[Date] = D )
+		formatString: \$#,0"M"
+		isHidden
+		displayFolder: 01 Market
+		lineageTag: 6a033e60-958d-5fc2-a21f-a4922035c8a6
+
+	/// Downloads in the same quarter a year earlier.
+	measure 'Year-Ago Downloads' = VAR D = EDATE ( [Latest Quarter Date], -12 ) RETURN CALCULATE ( [Downloads], REMOVEFILTERS ( 'Date' ), Fact_MarketQuarter[Date] = D )
+		formatString: #,0"M"
+		isHidden
+		displayFolder: 01 Market
+		lineageTag: 39b4a359-74f0-52f8-842a-69305a90d53c
+
+	/// Latest quarter against the same quarter a year earlier.
+	measure 'IAP Revenue YoY %' = DIVIDE ( [Latest IAP Revenue] - [Year-Ago IAP Revenue], [Year-Ago IAP Revenue] )
+		formatString: 0.0%
+		displayFolder: 01 Market
+		lineageTag: 3c60bc74-1d39-5b25-a02d-1258a1f4ccef
+
+	/// Latest quarter against the same quarter a year earlier.
+	measure 'Downloads YoY %' = DIVIDE ( [Latest Downloads] - [Year-Ago Downloads], [Year-Ago Downloads] )
+		formatString: 0.0%
+		displayFolder: 01 Market
+		lineageTag: 3881bc2b-c3ab-54dd-ad3b-94fe6c1b4439
+
+	/// Change in revenue per download against a year earlier.
+	measure 'Revenue per Download YoY %' = VAR PY = DIVIDE ( [Year-Ago IAP Revenue], [Year-Ago Downloads] ) RETURN DIVIDE ( [Latest Revenue per Download] - PY, PY )
+		formatString: 0.0%
+		displayFolder: 01 Market
+		lineageTag: 735bbe09-f4fb-59ff-b077-ab03b7ae6242
+
+	/// In-app revenue by market, Q1 2026.
+	measure 'Region Revenue' = SUM ( Fact_RegionPerformance[Revenue USD M] )
+		formatString: \$#,0"M"
+		displayFolder: 02 Regions
+		lineageTag: 6c1eaa7a-1429-53ca-82ad-c045b596cdac
+
+	/// Downloads by market, Q1 2026.
+	measure 'Region Downloads' = SUM ( Fact_RegionPerformance[Downloads M] )
+		formatString: #,0.0"M"
+		displayFolder: 02 Regions
+		lineageTag: ae911d55-b1de-5fff-a984-c480ed16571a
+
+	/// Share of global in-app revenue.
+	measure 'Region Revenue Share' = DIVIDE ( [Region Revenue], CALCULATE ( [Region Revenue], REMOVEFILTERS ( Dim_Region ) ) )
+		formatString: 0.0%
+		displayFolder: 02 Regions
+		lineageTag: 79ebb7f4-2318-5150-9137-f90b2fdb743d
+
+	/// Share of global downloads.
+	measure 'Region Download Share' = DIVIDE ( [Region Downloads], CALCULATE ( [Region Downloads], REMOVEFILTERS ( Dim_Region ) ) )
+		formatString: 0.0%
+		displayFolder: 02 Regions
+		lineageTag: 441b2824-69a1-5743-b2aa-3a6a62484d44
+
+	/// Revenue growth against Q1 2025. Blank where the source gives no growth rate.
+	measure 'Region Revenue YoY %' = VAR PY = SUM ( Fact_RegionPerformance[Revenue PY USD M] ) VAR CY = CALCULATE ( [Region Revenue], NOT ISBLANK ( Fact_RegionPerformance[Revenue PY USD M] ) ) RETURN IF ( PY > 0, DIVIDE ( CY - PY, PY ) )
+		formatString: 0.0%
+		displayFolder: 02 Regions
+		lineageTag: 13c04cd0-053b-5570-b0fe-8cee8c665a6a
+
+	/// Revenue in the quarter divided by downloads in the quarter. Includes revenue from earlier installs.
+	measure 'Region Revenue per Download' = DIVIDE ( [Region Revenue], [Region Downloads] )
+		formatString: \$#,0.00
+		displayFolder: 02 Regions
+		lineageTag: b4e509fb-0f4a-50dc-adaa-b766ad82a42b
+
+	/// Cost per install of the marketing region the market belongs to.
+	measure 'Region CPI' = CALCULATE ( AVERAGE ( Fact_CostPerInstall[CPI USD] ), TREATAS ( VALUES ( Dim_Region[Marketing Region] ), Dim_MarketingRegion[Marketing Region] ) )
+		formatString: \$#,0.00
+		displayFolder: 02 Regions
+		lineageTag: 3c8b7abe-7ec0-54d6-b1eb-7d5851a7156b
+
+	/// Revenue per download divided by cost per install. Above 1 means a download earns more than it costs to buy.
+	measure 'Revenue to CPI Multiple' = DIVIDE ( [Region Revenue per Download], [Region CPI] )
+		formatString: 0.0"x"
+		displayFolder: 02 Regions
+		lineageTag: acff58ab-0c0e-582c-b8ea-060e5aa06ff5
+
+	/// Marketing region with the highest revenue-to-CPI multiple.
+	measure 'Top Return Region' = VAR T = ADDCOLUMNS ( FILTER ( ALL ( Dim_Region[Marketing Region] ), Dim_Region[Marketing Region] <> "Other" ), "@M", [Revenue to CPI Multiple] ) RETURN MAXX ( TOPN ( 1, T, [@M], DESC ), Dim_Region[Marketing Region] )
+		displayFolder: 02 Regions
+		lineageTag: 56a17e3b-6862-5335-81a6-37a9303d0f15
+
+	/// Highest revenue-to-CPI multiple.
+	measure 'Top Return Multiple' = VAR T = ADDCOLUMNS ( FILTER ( ALL ( Dim_Region[Marketing Region] ), Dim_Region[Marketing Region] <> "Other" ), "@M", [Revenue to CPI Multiple] ) RETURN MAXX ( T, [@M] )
+		formatString: 0.0"x"
+		displayFolder: 02 Regions
+		lineageTag: 2ad09cb6-ab93-572c-b58c-8440d79f3c23
+
+	/// Average cost per install, 2025. DianDian.
+	measure 'Cost per Install' = AVERAGE ( Fact_CostPerInstall[CPI USD] )
+		formatString: \$#,0.00
+		displayFolder: 03 Cost Benchmarks
+		lineageTag: 19f9938f-d114-509f-8eea-eab0c18d8f61
+
+	/// Share of overseas ad spend by channel.
+	measure 'Ad Channel Share' = CALCULATE ( SUM ( Fact_BenchmarkMix[Value] ), Fact_BenchmarkMix[Mix] = "Ad Channel" )
+		formatString: 0%
+		displayFolder: 03 Cost Benchmarks
+		lineageTag: 34e50f3e-bb2a-53dd-b545-058361425228
+
+	/// Share of total cost of an overseas platform.
+	measure 'Cost Structure Share' = CALCULATE ( SUM ( Fact_BenchmarkMix[Value] ), Fact_BenchmarkMix[Mix] = "Cost Structure" )
+		formatString: 0%
+		displayFolder: 03 Cost Benchmarks
+		lineageTag: 7dff58ce-1f59-50a4-848c-705f2d472257
+
+	/// Midpoint of the 80 to 90 percent saving against traditional production.
+	measure 'AI Production Saving' = CALCULATE ( SUM ( Fact_BenchmarkMix[Value] ), Fact_BenchmarkMix[Mix] = "AI Production Saving" )
+		formatString: 0%
+		displayFolder: 03 Cost Benchmarks
+		lineageTag: 17c6f4de-6bb5-51bc-be6e-7cfe15e2e59b
+
+	/// Midpoint of a benchmark range.
+	measure 'Benchmark Midpoint' = AVERAGEX ( Fact_ContentBenchmark, ( Fact_ContentBenchmark[Low] + Fact_ContentBenchmark[High] ) / 2 )
+		formatString: 0.00
+		isHidden
+		displayFolder: 04 Content
+		lineageTag: e32148cd-da4c-5baf-813f-177e367eca44
+
+	/// Midpoint of completion, conversion or retention.
+	measure 'Rate Benchmark' = CALCULATE ( [Benchmark Midpoint], Fact_ContentBenchmark[Unit] = "Rate" )
+		formatString: 0.0%
+		displayFolder: 04 Content
+		lineageTag: 17ec92d4-ebb6-549e-927c-cdc211a2b276
+
+	/// Midpoint share of users who pay.
+	measure 'Payer Conversion' = CALCULATE ( [Benchmark Midpoint], Fact_ContentBenchmark[Metric] = "Payer Conversion" )
+		formatString: 0.0%
+		displayFolder: 04 Content
+		lineageTag: 9de9fed4-e073-503d-87e9-30ebd9a13acb
+
+	/// Midpoint ARPU. The source does not state the period.
+	measure 'ARPU Benchmark' = CALCULATE ( [Benchmark Midpoint], Fact_ContentBenchmark[Metric] = "ARPU" )
+		formatString: \$#,0.00
+		displayFolder: 04 Content
+		lineageTag: 527ed08c-e189-5591-8d1c-32691207cd98
+
+	/// Payer conversion of locally made titles.
+	measure 'Local Payer Conversion' = CALCULATE ( [Payer Conversion], Dim_ContentType[Content Type] = "Locally Made" )
+		formatString: 0.0%
+		displayFolder: 04 Content
+		lineageTag: 58eb064e-2daf-5d1f-899d-b0c0ffd452e8
+
+	/// Payer conversion of dubbed titles.
+	measure 'Dubbed Payer Conversion' = CALCULATE ( [Payer Conversion], Dim_ContentType[Content Type] = "Dubbed" )
+		formatString: 0.0%
+		displayFolder: 04 Content
+		lineageTag: daa67428-e6cd-504b-b4b8-5ef86d67523b
+
+	/// Return of locally made titles against dubbed.
+	measure 'Local ROI Multiple' = CALCULATE ( [Benchmark Midpoint], Fact_ContentBenchmark[Metric] = "ROI Multiple", Dim_ContentType[Content Type] = "Locally Made" )
+		formatString: 0.0"x"
+		displayFolder: 04 Content
+		lineageTag: 56cdebca-c742-5c56-8ef1-d9a12e9fc8ca
+
+	/// Share of overseas titles.
+	measure 'Content Share' = SUM ( Fact_ContentShare[Share] )
+		formatString: 0.0%
+		displayFolder: 04 Content
+		lineageTag: a99390bc-131b-5fc7-afd1-c970205ff306
+
+	/// Forecast share of locally made titles in 2026.
+	measure 'Local Share 2026F' = CALCULATE ( [Content Share], Fact_ContentShare[Period] = "2026F", Dim_ContentType[Content Type] = "Locally Made" )
+		formatString: 0.0%
+		displayFolder: 04 Content
+		lineageTag: d6f9a9f3-5fa1-59c6-97cb-8ef1dc8eba78
+
+	/// DataEye paid-promotion index. Not money.
+	measure 'Genre Heat' = SUM ( Fact_Genre[Heat] )
+		formatString: #,0
+		displayFolder: 04 Content
+		lineageTag: dcabcac2-55cb-55fa-9c05-3cf5f9df5600
+
+	/// Number of titles carrying the genre tag.
+	measure 'Genre Titles' = SUM ( Fact_Genre[Titles] )
+		formatString: #,0
+		displayFolder: 04 Content
+		lineageTag: f576b879-a864-579a-9a0c-5243980038ad
+
+	/// Promotion index per title, in millions.
+	measure 'Heat per Title' = DIVIDE ( [Genre Heat], [Genre Titles] ) / 1000000
+		formatString: 0.00"M"
+		displayFolder: 04 Content
+		lineageTag: 0112fcc6-dd5a-5e04-bf5a-fc1bc6d0fe67
+
+	/// Midpoint production cost per series, USD thousand.
+	measure 'Format Cost Midpoint' = AVERAGEX ( Fact_FormatCost, ( Fact_FormatCost[Low USD K] + Fact_FormatCost[High USD K] ) / 2 )
+		formatString: \$#,0"K"
+		displayFolder: 05 Format
+		lineageTag: c406b40e-29e3-5796-8e65-c6aa56a4dcff
+
+	/// Lowest production cost in the range.
+	measure 'Format Cost Low' = MIN ( Fact_FormatCost[Low USD K] )
+		formatString: \$#,0"K"
+		displayFolder: 05 Format
+		lineageTag: e0d050dc-7c53-5818-aa9b-01862845993d
+
+	/// Highest production cost in the range.
+	measure 'Format Cost High' = MAX ( Fact_FormatCost[High USD K] )
+		formatString: \$#,0"K"
+		displayFolder: 05 Format
+		lineageTag: 3e856b56-334c-59a7-9801-baf897bf38a4
+
+	/// AI share of new overseas releases.
+	measure 'AI Release Share' = AVERAGE ( Fact_AIReleaseShare[AI Share] )
+		formatString: 0%
+		displayFolder: 05 Format
+		lineageTag: eafcd0fd-7e7d-52e6-a6e7-c58d7ed3431b
+
+	/// AI share of new releases in the latest quarter.
+	measure 'Latest AI Release Share' = VAR D = CALCULATE ( MAX ( Fact_AIReleaseShare[Date] ), REMOVEFILTERS () ) RETURN CALCULATE ( [AI Release Share], REMOVEFILTERS ( 'Date' ), Fact_AIReleaseShare[Date] = D )
+		formatString: 0%
+		displayFolder: 05 Format
+		lineageTag: b13e82dc-7944-5476-b1e8-a590389f4c7c
+
+	/// Female share of users.
+	measure 'Female Share' = SUM ( Fact_Audience[Female] )
+		formatString: 0%
+		displayFolder: 05 Format
+		lineageTag: 3a231655-f021-559f-a313-1c8dff292608
+
+	/// Male share of users.
+	measure 'Male Share' = SUM ( Fact_Audience[Male] )
+		formatString: 0%
+		displayFolder: 05 Format
+		lineageTag: d2c60ad1-9def-5560-8a28-7a062cdffd9d
+
+	/// Production cost per series. Default is the midpoint of reported Western AI production cost per hour.
+	measure 'Selected Production Cost' = SELECTEDVALUE ( 'Production Cost'[Production Cost], 25000 )
+		formatString: \$#,0
+		displayFolder: 06 Scenario
+		lineageTag: 4ac88929-dc7c-568b-8cdc-2b2fb86b38b5
+
+	/// Change applied to benchmark ARPU.
+	measure 'Selected ARPU Adjustment' = SELECTEDVALUE ( 'ARPU Adjustment'[ARPU Adjustment], 0 ) / 100
+		formatString: 0%
+		displayFolder: 06 Scenario
+		lineageTag: 0e31a866-6e95-57ed-a87f-259c9178d5a9
+
+	/// Benchmark ARPU after the adjustment.
+	measure 'Scenario ARPU' = [ARPU Benchmark] * ( 1 + [Selected ARPU Adjustment] )
+		formatString: \$#,0.00
+		displayFolder: 06 Scenario
+		lineageTag: fce66d1e-4ff9-5ed1-a3b7-2ebc05171ee1
+
+	/// Cost per install divided by payer conversion.
+	measure 'Cost to Win a Payer' = DIVIDE ( [Cost per Install], [Payer Conversion] )
+		formatString: \$#,0.00
+		displayFolder: 06 Scenario
+		lineageTag: 9d287116-e32c-5d31-baac-88e0980612c4
+
+	/// ARPU minus the cost to win a payer.
+	measure 'Contribution per Payer' = [Scenario ARPU] - [Cost to Win a Payer]
+		formatString: \$#,0.00;-\$#,0.00
+		displayFolder: 06 Scenario
+		lineageTag: 3a90e84e-05ae-5740-bf03-ac74d27e0cad
+
+	/// Payers needed to recover one series. Blank when each payer loses money.
+	measure 'Break-even Payers' = VAR C = [Contribution per Payer] RETURN IF ( C > 0, ROUNDUP ( DIVIDE ( [Selected Production Cost], C ), 0 ) )
+		formatString: #,0
+		displayFolder: 06 Scenario
+		lineageTag: e164ca4f-7228-5d5b-8dce-016117dc1de6
+
+	/// Marketing spend needed to reach break-even payers.
+	measure 'Marketing Budget to Break Even' = VAR P = [Break-even Payers] RETURN IF ( NOT ISBLANK ( P ), P * [Cost to Win a Payer] )
+		formatString: \$#,0
+		displayFolder: 06 Scenario
+		lineageTag: fec11ac5-515f-53cd-a268-27f5e11a903c
+
+	/// In-app revenue, 2025. DianDian.
+	measure 'App Revenue 2025' = SUM ( Fact_AppScorecard[Revenue 2025 USD M] )
+		formatString: \$#,0"M"
+		displayFolder: 07 Competition
+		lineageTag: 357168fb-725e-54da-8252-a9687c7875a5
+
+	/// Downloads, 2025. DianDian.
+	measure 'App Downloads 2025' = SUM ( Fact_AppScorecard[Downloads 2025 M] )
+		formatString: #,0"M"
+		displayFolder: 07 Competition
+		lineageTag: 6f377c0d-84b1-539f-aa49-8cba49a42ee2
+
+	/// Average monthly active users, 2025. DianDian.
+	measure 'App Avg MAU 2025' = SUM ( Fact_AppScorecard[Avg MAU 2025 M] )
+		formatString: #,0.0"M"
+		displayFolder: 07 Competition
+		lineageTag: a3fbe3de-2b4d-5982-aca4-7f1c195314a1
+
+	/// Annual in-app revenue per monthly active user.
+	measure 'Revenue per MAU' = IF ( [App Avg MAU 2025] > 0, DIVIDE ( [App Revenue 2025], [App Avg MAU 2025] ) )
+		formatString: \$#,0.00
+		displayFolder: 07 Competition
+		lineageTag: b1ffaafb-486f-5beb-a8ff-5ad5d7c68aa2
+
+	/// In-app revenue, Q1 2026. Sensor Tower chart read.
+	measure 'App Revenue Q1 2026' = SUM ( Fact_AppScorecard[Revenue Q1 2026 USD M] )
+		formatString: \$#,0"M"
+		displayFolder: 07 Competition
+		lineageTag: c71a7f6a-1c3a-5d6e-8d78-3accc3117a2a
+
+	/// Q1 2026 against Q4 2025. Sensor Tower.
+	measure 'App Revenue QoQ %' = AVERAGE ( Fact_AppScorecard[Revenue QoQ] )
+		formatString: 0%
+		displayFolder: 07 Competition
+		lineageTag: 72bb4c3b-40f2-5e30-bfc4-bbbbd0c7b4e0
+
+	/// United States share of 2025 in-app revenue.
+	measure 'US Revenue Share' = DIVIDE ( SUM ( Fact_AppScorecard[US Revenue 2025 USD M] ), CALCULATE ( [App Revenue 2025], NOT ISBLANK ( Fact_AppScorecard[US Revenue 2025 USD M] ) ) )
+		formatString: 0%
+		displayFolder: 07 Competition
+		lineageTag: 65bd0a04-248f-54bc-8a53-3b8802241c3c
+
+	/// In-app purchase share of monetization. Sensor Tower.
+	measure 'IAP Share' = SUM ( Fact_AppScorecard[IAP Share] )
+		formatString: 0%
+		displayFolder: 07 Competition
+		lineageTag: 612adc5b-1854-554b-b242-c2c543ea8b8f
+
+	/// Advertising share of monetization. Sensor Tower.
+	measure 'Ad Share' = SUM ( Fact_AppScorecard[Ad Share] )
+		formatString: 0%
+		displayFolder: 07 Competition
+		lineageTag: ae368dab-a788-5bd2-8d8e-53ad12010d3d
+
+	/// Monthly in-app revenue, 2025. DianDian.
+	measure 'App Monthly Revenue' = SUM ( Fact_AppMonthly[Revenue USD M] )
+		formatString: \$#,0.0"M"
+		displayFolder: 07 Competition
+		lineageTag: abd5ff75-8a49-56d2-ac52-32190af7b149
+
+	/// Overseas in-app revenue, 2025, on the DianDian basis.
+	measure 'Overseas IAP 2025' = CALCULATE ( SUM ( Fact_MarketSize[USD B] ), Fact_MarketSize[Series] = "Outside China IAP (DianDian)", REMOVEFILTERS ( 'Date' ) ) * 1000
+		formatString: \$#,0"M"
+		isHidden
+		displayFolder: 07 Competition
+		lineageTag: 1554d999-6461-5b9f-b4a2-0785c9aa3daf
+
+	/// Share of overseas in-app revenue held by the two largest apps, 2025.
+	measure 'Top 2 App Share' = VAR T = TOPN ( 2, ALL ( Dim_App[App] ), [App Revenue 2025] ) RETURN DIVIDE ( CALCULATE ( [App Revenue 2025], T ), [Overseas IAP 2025] )
+		formatString: 0.0%
+		displayFolder: 07 Competition
+		lineageTag: 40c01b8e-e0e0-50de-8a23-13a9b9cf9627
+
+	/// Share of overseas in-app revenue held by the ten largest apps, 2025.
+	measure 'Top 10 App Share' = VAR T = TOPN ( 10, ALL ( Dim_App[App] ), [App Revenue 2025] ) RETURN DIVIDE ( CALCULATE ( [App Revenue 2025], T ), [Overseas IAP 2025] )
+		formatString: 0.0%
+		displayFolder: 07 Competition
+		lineageTag: 9f25695e-a754-5629-8814-8e482f296e07
+
+	/// Market size, USD billion.
+	measure 'Market Size' = CALCULATE ( SUM ( Fact_MarketSize[USD B] ), Fact_MarketSize[In Outlook] = "Yes" )
+		formatString: \$#,0.0"B"
+		displayFolder: 07 Competition
+		lineageTag: 1bd36461-ca44-5704-b7c5-294a2dba66d0
+
+	/// China market size, USD billion.
+	measure 'Market Size China' = CALCULATE ( [Market Size], Fact_MarketSize[Series] = "China (DataEye)" )
+		formatString: \$#,0.0"B"
+		displayFolder: 07 Competition
+		lineageTag: 5c974eac-9b29-5a2f-8ca3-08f13ea29a60
+
+	/// Outside-China market size, USD billion.
+	measure 'Market Size Outside China' = CALCULATE ( [Market Size], Fact_MarketSize[Series] = "Outside China (MPA)" )
+		formatString: \$#,0.0"B"
+		displayFolder: 07 Competition
+		lineageTag: 5d42457c-b8ab-5892-bc33-d2702d5411a6
+
+	/// Outside-China market estimate for 2026. MPA.
+	measure 'Overseas Market 2026E' = CALCULATE ( [Market Size], Fact_MarketSize[Series] = "Outside China (MPA)", 'Date'[Year] = 2026 )
+		formatString: \$#,0.0"B"
+		displayFolder: 07 Competition
+		lineageTag: d452095e-f2cc-5492-81aa-96b45e3cad46
+
+	/// MPA 2026 estimate against 2025.
+	measure 'Overseas Market 2026E YoY %' = VAR PY = CALCULATE ( [Market Size], Fact_MarketSize[Series] = "Outside China (MPA)", 'Date'[Year] = 2025 ) RETURN DIVIDE ( [Overseas Market 2026E] - PY, PY )
+		formatString: 0%
+		displayFolder: 07 Competition
+		lineageTag: aa0c415a-54a3-5d1d-86c7-167355c0a8f0
+
+	/// FY2025 revenue.
+	measure 'Operator Revenue' = SUM ( Fact_Operator[Revenue USD M] )
+		formatString: \$#,0"M"
+		displayFolder: 07 Competition
+		lineageTag: 7225c15b-70fe-52c5-912b-83f0b04a4c56
+
+	/// FY2025 net profit.
+	measure 'Operator Net Profit' = SUM ( Fact_Operator[Net Profit USD M] )
+		formatString: \$#,0.0"M";-\$#,0.0"M"
+		displayFolder: 07 Competition
+		lineageTag: 642b8269-0d53-5daf-916f-4641d7af7efb
+
+	/// Net profit divided by revenue.
+	measure 'Operator Net Margin' = VAR N = SUM ( Fact_Operator[Net Profit USD M] ) RETURN IF ( COUNT ( Fact_Operator[Net Profit USD M] ) > 0, DIVIDE ( N, [Operator Revenue] ) )
+		formatString: 0.0%
+		displayFolder: 07 Competition
+		lineageTag: 1f23231b-c1d2-59b9-933d-307f4ba99067
+
+	/// Marketing spend as a share of revenue.
+	measure 'Operator Marketing Share' = AVERAGE ( Fact_Operator[Marketing Share] )
+		formatString: 0%
+		displayFolder: 07 Competition
+		lineageTag: a49a20a1-e952-5081-8460-9cf62ea63f2e
+
+	/// Market capitalization on 2026-11-08.
+	measure 'Operator Market Cap' = SUM ( Fact_Operator[Market Cap USD M] )
+		formatString: \$#,0"M"
+		displayFolder: 07 Competition
+		lineageTag: 4136eba3-639d-5aca-a618-69e82d79a49b
+
+	/// Observed plan price.
+	measure 'Plan Price' = AVERAGE ( Fact_Pricing[Price USD] )
+		formatString: \$#,0.00
+		displayFolder: 08 Pricing
+		lineageTag: d3835d17-91da-5e45-8be1-d5487e1b3ea8
+
+	/// ReelShort plan price.
+	measure 'ReelShort Price' = CALCULATE ( [Plan Price], Dim_App[App] = "ReelShort" )
+		formatString: \$#,0.00
+		displayFolder: 08 Pricing
+		lineageTag: fec7191b-dfd5-53d4-9225-1f0b476b006a
+
+	/// Free episodes as a share of total episodes in the sample.
+	measure 'Free Episode Share' = DIVIDE ( SUM ( Fact_Paywall[Free Episodes] ), SUM ( Fact_Paywall[Total Episodes] ) )
+		formatString: 0%
+		displayFolder: 08 Pricing
+		lineageTag: cc53684d-c362-586b-bf26-1da38a795d21
+
+	/// Green for growth, red for decline.
+	measure 'Growth Color' = VAR V = [Region Revenue YoY %] RETURN SWITCH ( TRUE (), ISBLANK ( V ), "#8A94A0", V >= 0, "#2E7D4F", "#C2453D" )
+		isHidden
+		displayFolder: 09 Helpers
+		lineageTag: 4a2b7727-540a-505b-9562-d4231f7a6464
+
+	/// Green at or above 1x, red below.
+	measure 'Multiple Color' = VAR V = [Revenue to CPI Multiple] RETURN SWITCH ( TRUE (), ISBLANK ( V ), "#8A94A0", V >= 1, "#2E7D4F", "#C2453D" )
+		isHidden
+		displayFolder: 09 Helpers
+		lineageTag: a35bf90c-df85-5c6b-a115-57f2893ff18f
+
+	/// Green when a payer contributes, red when a payer loses money.
+	measure 'Payback Color' = VAR V = [Contribution per Payer] RETURN SWITCH ( TRUE (), ISBLANK ( V ), "#8A94A0", V > 0, "#2E7D4F", "#C2453D" )
+		isHidden
+		displayFolder: 09 Helpers
+		lineageTag: f5a1e5ef-d0aa-5bb4-a7e7-e065d327c063
+
+	/// Green for profit, red for loss.
+	measure 'Margin Color' = VAR V = [Operator Net Margin] RETURN SWITCH ( TRUE (), ISBLANK ( V ), "#8A94A0", V >= 0, "#2E7D4F", "#C2453D" )
+		isHidden
+		displayFolder: 09 Helpers
+		lineageTag: 8af0dea5-778d-59fd-a11c-7b450dbded70
+
+	/// ReelShort monthly plan price.
+	measure 'ReelShort Monthly Price' = CALCULATE ( [Plan Price], Dim_App[App] = "ReelShort", Fact_Pricing[Plan] = "Monthly" )
+		formatString: \$#,0.00
+		displayFolder: 08 Pricing
+		lineageTag: cf29ceb6-12e5-5851-b381-c805c2ab6584
+
+	/// Share of FreeReels monetization from ads.
+	measure 'FreeReels Ad Share' = CALCULATE ( [Ad Share], Dim_App[App] = "FreeReels" )
+		formatString: 0%
+		displayFolder: 08 Pricing
+		lineageTag: 9fc912a7-0339-50e4-928c-f43e4d42696a
+
+	/// Overseas in-app revenue by year, USD million. DianDian.
+	measure 'Overseas Revenue' = SUM ( Fact_OverseasYear[Revenue USD M] )
+		formatString: \$#,0"M"
+		displayFolder: 10 Overseas
+		lineageTag: 6560bcf6-736a-54fb-a87a-3faae4977c58
+
+	/// Overseas downloads by year, million. DianDian.
+	measure 'Overseas Downloads' = SUM ( Fact_OverseasYear[Downloads M] )
+		formatString: #,0"M"
+		displayFolder: 10 Overseas
+		lineageTag: ac1bc00d-4cda-5119-a409-8a1875200c6d
+
+	/// Overseas in-app revenue, 2025, USD billion.
+	measure 'Overseas Revenue 2025' = CALCULATE ( [Overseas Revenue], Fact_OverseasYear[Year] = "2025" ) / 1000
+		formatString: \$#,0.00"B"
+		displayFolder: 10 Overseas
+		lineageTag: fea7ef19-2fac-536d-8e77-10b30a10b1ec
+
+	/// 2025 against 2024.
+	measure 'Overseas Revenue 2025 YoY %' = VAR C = CALCULATE ( [Overseas Revenue], Fact_OverseasYear[Year] = "2025" ) VAR P = CALCULATE ( [Overseas Revenue], Fact_OverseasYear[Year] = "2024" ) RETURN DIVIDE ( C - P, P )
+		formatString: 0%
+		displayFolder: 10 Overseas
+		lineageTag: 19f529d1-907a-5e83-80ba-5a7cf8879df7
+
+	/// Overseas downloads, 2025, billion.
+	measure 'Overseas Downloads 2025' = CALCULATE ( [Overseas Downloads], Fact_OverseasYear[Year] = "2025" ) / 1000
+		formatString: #,0.00"B"
+		displayFolder: 10 Overseas
+		lineageTag: a934a5a4-f7d1-5276-a21f-6a363ade08db
+
+	/// 2025 against 2024.
+	measure 'Overseas Downloads 2025 YoY %' = VAR C = CALCULATE ( [Overseas Downloads], Fact_OverseasYear[Year] = "2025" ) VAR P = CALCULATE ( [Overseas Downloads], Fact_OverseasYear[Year] = "2024" ) RETURN DIVIDE ( C - P, P )
+		formatString: 0%
+		displayFolder: 10 Overseas
+		lineageTag: 984b838b-dd80-53f5-845d-ecde0285c234
+
+	/// Share of overseas downloads, 2025.
+	measure 'Continent Download Share' = SUM ( Fact_ContinentPerformance[Download Share] )
+		formatString: 0.0%
+		displayFolder: 10 Overseas
+		lineageTag: 7845a02d-3b5d-5e0f-8d48-7663a8ef07d3
+
+	/// Share of overseas in-app revenue, 2025.
+	measure 'Continent Revenue Share' = SUM ( Fact_ContinentPerformance[Revenue Share] )
+		formatString: 0.0%
+		displayFolder: 10 Overseas
+		lineageTag: fdd74ac8-22b2-57c0-9e8d-5baa2e9f3c35
+
+	/// In-app revenue divided by downloads, 2025.
+	measure 'Continent Revenue per Download' = DIVIDE ( SUM ( Fact_ContinentPerformance[Revenue USD M] ), SUM ( Fact_ContinentPerformance[Downloads M] ) )
+		formatString: \$#,0.00
+		displayFolder: 10 Overseas
+		lineageTag: 22aafd19-4fc6-5102-95fd-8faf9cbd6068
+
+	/// North America share of overseas revenue.
+	measure 'North America Revenue Share' = CALCULATE ( [Continent Revenue Share], Fact_ContinentPerformance[Continent] = "North America" )
+		formatString: 0.0%
+		displayFolder: 10 Overseas
+		lineageTag: 497db90e-4f4d-50d8-bc7e-25fe308ddb90
+
+	/// North America share of overseas downloads.
+	measure 'North America Download Share' = CALCULATE ( [Continent Download Share], Fact_ContinentPerformance[Continent] = "North America" )
+		formatString: 0.0%
+		displayFolder: 10 Overseas
+		lineageTag: 1a4cf0d3-5bdb-584b-9ade-fcca2ec94221
+
+	/// Asia share of overseas downloads.
+	measure 'Asia Download Share' = CALCULATE ( [Continent Download Share], Fact_ContinentPerformance[Continent] = "Asia" )
+		formatString: 0.0%
+		displayFolder: 10 Overseas
+		lineageTag: f26d7067-aee1-5032-ae0b-7afb63500fa2
+
+	/// Asia share of overseas revenue.
+	measure 'Asia Revenue Share' = CALCULATE ( [Continent Revenue Share], Fact_ContinentPerformance[Continent] = "Asia" )
+		formatString: 0.0%
+		displayFolder: 10 Overseas
+		lineageTag: b4d1368a-7897-51e4-a92a-eebd06ea4f95
+
+	/// North America revenue per download.
+	measure 'North America Revenue per Download' = CALCULATE ( [Continent Revenue per Download], Fact_ContinentPerformance[Continent] = "North America" )
+		formatString: \$#,0.00
+		displayFolder: 10 Overseas
+		lineageTag: f426b165-e8cf-56b4-8323-2ef081a7aac7
+
+	/// South America revenue per download.
+	measure 'South America Revenue per Download' = CALCULATE ( [Continent Revenue per Download], Fact_ContinentPerformance[Continent] = "South America" )
+		formatString: \$#,0.00
+		displayFolder: 10 Overseas
+		lineageTag: 429dd989-03de-5310-848c-4e53009fd916
+
+	/// In-app revenue growth in Middle East markets, 2025.
+	measure 'Middle East Revenue Growth' = SUM ( Fact_MenaGrowth[Growth] )
+		formatString: 0%
+		displayFolder: 10 Overseas
+		lineageTag: added4a3-ffa3-5c41-a19a-9a50a381cf23
+
+	/// In-app revenue by country group, 2025.
+	measure 'App Country Revenue' = SUM ( Fact_AppCountry[Revenue USD M] )
+		formatString: \$#,0.0"M"
+		displayFolder: 10 Overseas
+		lineageTag: 446e9be6-aa53-5957-95f2-efa71a2e3959
+
+	/// App with the highest annual revenue per monthly user.
+	measure 'Top Revenue per MAU App' = VAR T = ADDCOLUMNS ( ALL ( Dim_App[App] ), "@M", [Revenue per MAU] ) RETURN MAXX ( TOPN ( 1, T, [@M], DESC ), Dim_App[App] )
+		displayFolder: 10 Overseas
+		lineageTag: 1d421e55-93d3-5ec3-a5d5-ee71bd8211e7
+
+	/// Highest annual revenue per monthly user.
+	measure 'Top Revenue per MAU' = MAXX ( ALL ( Dim_App[App] ), [Revenue per MAU] )
+		formatString: \$#,0.00
+		displayFolder: 10 Overseas
+		lineageTag: 35e292bd-b8ca-5a4f-bd51-77d5ebd7f0ed
+
+	/// App with the highest revenue growth, Q1 2026 against Q4 2025.
+	measure 'Fastest Growing App' = VAR T = ADDCOLUMNS ( FILTER ( ALL ( Dim_App[App] ), NOT ISBLANK ( [App Revenue QoQ %] ) ), "@M", [App Revenue QoQ %] ) RETURN MAXX ( TOPN ( 1, T, [@M], DESC ), Dim_App[App] )
+		displayFolder: 10 Overseas
+		lineageTag: 8b2928a5-6084-5535-a940-885191102632
+
+	/// Highest revenue growth, Q1 2026 against Q4 2025.
+	measure 'Fastest App Growth' = MAXX ( FILTER ( ALL ( Dim_App[App] ), NOT ISBLANK ( [App Revenue QoQ %] ) ), [App Revenue QoQ %] )
+		formatString: 0%
+		displayFolder: 10 Overseas
+		lineageTag: 5086e630-51b8-57cc-8290-c1599b230d29
+
+	/// China market size, USD billion.
+	measure 'China Market' = SUM ( Fact_ChinaMarket[Total USD B] )
+		formatString: \$#,0.0"B"
+		displayFolder: 11 China
+		lineageTag: 7b5977ab-10d3-52e9-b782-eadb3de45594
+
+	/// Free, ad-funded part of the China market, USD billion.
+	measure 'China Free Market' = SUM ( Fact_ChinaMarket[Free USD B] )
+		formatString: \$#,0.0"B"
+		displayFolder: 11 China
+		lineageTag: 4a73b838-c342-5863-8152-f64649ac09d9
+
+	/// Paid part of the China market, USD billion.
+	measure 'China Paid Market' = SUM ( Fact_ChinaMarket[Paid USD B] )
+		formatString: \$#,0.0"B"
+		displayFolder: 11 China
+		lineageTag: a030c0f8-172e-5de6-838b-6df00ed26a6d
+
+	/// China market size, 2025.
+	measure 'China Market 2025' = CALCULATE ( [China Market], Fact_ChinaMarket[Year] = "2025" )
+		formatString: \$#,0.0"B"
+		displayFolder: 11 China
+		lineageTag: 756ab37b-7d71-522e-a27d-a21853bffed4
+
+	/// 2025 against 2024.
+	measure 'China Market 2025 YoY %' = VAR P = CALCULATE ( [China Market], Fact_ChinaMarket[Year] = "2024" ) RETURN DIVIDE ( [China Market 2025] - P, P )
+		formatString: 0%
+		displayFolder: 11 China
+		lineageTag: 0ebe247d-6526-5c75-acfa-7ff26b30f329
+
+	/// Free, ad-funded share of the China market, 2025.
+	measure 'Free Share of China Market 2025' = DIVIDE ( CALCULATE ( [China Free Market], Fact_ChinaMarket[Year] = "2025" ), [China Market 2025] )
+		formatString: 0%
+		displayFolder: 11 China
+		lineageTag: 595894f7-75c0-5a29-a4bf-e9a651d6cb81
+
+	/// China microdramas against film box office, 2025.
+	measure 'China Comparison' = SUM ( Fact_ChinaComparison[USD B] )
+		formatString: \$#,0.0"B"
+		displayFolder: 11 China
+		lineageTag: 773029a1-5b58-54c3-85fc-6d925e7a4d0a
+
+	/// China microdrama viewers, June 2025.
+	measure 'China Viewers' = CALCULATE ( SUM ( Fact_ChinaUsers[Users M] ), Fact_ChinaUsers[Period] = "2025-06" )
+		formatString: #,0"M"
+		displayFolder: 11 China
+		lineageTag: 25991bd9-f297-5932-99fd-3bec1cfeac12
+
+	/// Hongguo monthly active users, million.
+	measure 'Hongguo MAU' = SUM ( Fact_HongguoMAU[MAU M] )
+		formatString: #,0"M"
+		displayFolder: 11 China
+		lineageTag: 1bba2a7e-ba0b-5f9e-b583-f750bd17751f
+
+	/// Cumulative share of titles below the band.
+	measure 'Title Share' = SUM ( Fact_TitleDistribution[Share] )
+		formatString: 0.0%
+		displayFolder: 11 China
+		lineageTag: ab3c48d4-57e3-5433-8eea-b427d317885c
+
+	/// Share of titles below 1M on the promotion index.
+	measure 'Titles Under 1M' = CALCULATE ( [Title Share], Fact_TitleDistribution[Band] = "Under 1M" )
+		formatString: 0.0%
+		displayFolder: 11 China
+		lineageTag: 1b5ad5b0-9cf9-5ed6-b007-b400236c68d4
+
+	/// Share of China viewers by age group.
+	measure 'China Viewer Share' = SUM ( Fact_ChinaAudience[Share] )
+		formatString: 0%
+		displayFolder: 11 China
+		lineageTag: b9f852e4-2823-56b5-ac4b-023c046f9563
+
+	/// Green for growth, red for decline.
+	measure 'QoQ Color' = VAR V = [App Revenue QoQ %] RETURN SWITCH ( TRUE (), ISBLANK ( V ), "#8A94A0", V >= 0, "#2E7D4F", "#C2453D" )
+		isHidden
+		displayFolder: 09 Helpers
+		lineageTag: 537543bf-d728-53c8-aec4-9a48b8473f0a
+
+	column Placeholder
+		dataType: string
+		isHidden
+		lineageTag: 8f46688c-bc0f-51ff-89fc-199351c03780
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Placeholder]
+
+		annotation SummarizationSetBy = User
+
+	partition _Measures = calculated
+		mode: import
+		source = ROW ( "Placeholder", BLANK () )
+

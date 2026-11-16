@@ -1,0 +1,52 @@
+/// Market size by source, USD billion. Sources count different things and are never added together.
+table Fact_MarketSize
+	lineageTag: 9493b003-4545-57b8-9493-16a24f307200
+
+	column Date
+		dataType: dateTime
+		isHidden
+		formatString: yyyy-mm-dd
+		lineageTag: 721e3a78-6ffe-5cfc-944f-c0ec719db162
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = User
+
+	column Series
+		dataType: string
+		lineageTag: 5a825953-ead5-5d5a-83f1-a20e60d7cd68
+		summarizeBy: none
+		sourceColumn: Series
+
+		annotation SummarizationSetBy = User
+
+	column 'USD B'
+		dataType: double
+		isHidden
+		lineageTag: 7025c664-b57b-52a6-a323-b2d7d6a1165a
+		summarizeBy: none
+		sourceColumn: USD B
+
+		annotation SummarizationSetBy = User
+
+	column 'In Outlook'
+		dataType: string
+		isHidden
+		lineageTag: 33b3ea9f-bfa7-59e7-895c-581f81c96030
+		summarizeBy: none
+		sourceColumn: In Outlook
+
+		annotation SummarizationSetBy = User
+
+	partition Fact_MarketSize = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "Fact_MarketSize.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"Date", type date}, {"Series", type text}, {"USD B", type number}, {"In Outlook", type text}}, "en-US")
+				in
+				    Typed
+
+		annotation PBI_ResultType = Table
+

@@ -1,0 +1,75 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "9b4d849009415825e962",
+  "displayName": "Unit Economics",
+  "displayOption": "FitToPage",
+  "height": 720,
+  "width": 1280,
+  "objects": {
+    "background": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'#F3F5F8'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "outspace": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'#F3F5F8'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "visualInteractions": [
+    {
+      "source": "2d248dbc09f738ca5815",
+      "target": "c913dc456d511e7ec3d2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "063f8b1bffd994727a76",
+      "target": "c913dc456d511e7ec3d2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "2d248dbc09f738ca5815",
+      "target": "0e5ce66031976c798d67",
+      "type": "NoFilter"
+    }
+  ]
+}

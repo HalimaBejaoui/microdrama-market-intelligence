@@ -1,0 +1,130 @@
+/// Calendar for every period in the model. Marked as the date table.
+table Date
+	lineageTag: 58862071-17f7-52b4-bf59-8091ee0f10af
+	dataCategory: Time
+
+	column Date
+		dataType: dateTime
+		isKey
+		formatString: dd mmm yyyy
+		lineageTag: f0f43bb1-b64b-5d96-b715-efd40a57b08f
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		annotation SummarizationSetBy = User
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: 54d231ca-4a39-5f67-94e2-626f35b5524a
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year]
+
+		annotation SummarizationSetBy = User
+
+	column Quarter
+		dataType: string
+		lineageTag: c4680eaf-963b-5f43-bda5-83abb4cbc437
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Quarter]
+
+		annotation SummarizationSetBy = User
+
+	column 'Year Quarter'
+		dataType: string
+		lineageTag: 5958c59d-1662-5360-bdf9-374066d7e9a3
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year Quarter]
+		sortByColumn: 'Year Quarter Key'
+
+		annotation SummarizationSetBy = User
+
+	column 'Year Quarter Key'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 6dddb6ed-9064-526a-bd58-6bfd2ff0931f
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year Quarter Key]
+
+		annotation SummarizationSetBy = User
+
+	column Month
+		dataType: string
+		lineageTag: 7fe984ce-a7d9-584f-ab3c-59c4f982eaa9
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month]
+		sortByColumn: 'Month No'
+
+		annotation SummarizationSetBy = User
+
+	column 'Month No'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: b18f1f6b-9a85-52d6-9ac6-a051fc8192c2
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month No]
+
+		annotation SummarizationSetBy = User
+
+	column 'Year Month'
+		dataType: string
+		lineageTag: 16d7dfdd-00c1-5c46-a19f-fe56d7fdc27e
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year Month]
+		sortByColumn: 'Year Month Key'
+
+		annotation SummarizationSetBy = User
+
+	column 'Year Month Key'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 7015d2c3-800f-54d2-9598-c71452d575bd
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year Month Key]
+
+		annotation SummarizationSetBy = User
+
+	hierarchy Calendar
+		lineageTag: 463e9c8e-27db-5a52-a0fe-f9e7d839a7db
+
+		level Year
+			lineageTag: bb99d61a-6abd-580a-9c60-a66ee64235e9
+			column: Year
+
+		level Quarter
+			lineageTag: 069d9a89-9066-59f0-b734-304404af3f3b
+			column: 'Year Quarter'
+
+		level Month
+			lineageTag: 7cbc4e02-5ddd-5a5c-bcc2-e98eb9ebc6d6
+			column: 'Year Month'
+
+		level Date
+			lineageTag: ea52411b-45e6-5cb1-b6aa-f585315ad443
+			column: Date
+
+	partition Date = calculated
+		mode: import
+		source =
+				ADDCOLUMNS (
+				    CALENDAR ( DATE ( 2024, 1, 1 ), DATE ( 2026, 12, 31 ) ),
+				    "Year", YEAR ( [Date] ),
+				    "Quarter", "Q" & QUARTER ( [Date] ),
+				    "Year Quarter", YEAR ( [Date] ) & " Q" & QUARTER ( [Date] ),
+				    "Year Quarter Key", YEAR ( [Date] ) * 10 + QUARTER ( [Date] ),
+				    "Month", FORMAT ( [Date], "mmm" ), "Month No", MONTH ( [Date] ),
+				    "Year Month", FORMAT ( [Date], "mmm yyyy" ), "Year Month Key", YEAR ( [Date] ) * 100 + MONTH ( [Date] )
+				)
+

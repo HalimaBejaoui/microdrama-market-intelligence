@@ -1,0 +1,464 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 2990.9105402663604,
+            "y": 498.48959802297
+          },
+          "nodeIndex": "_Measures",
+          "nodeLineageTag": "90c852bc-cc55-5261-9b39-18f72eb2812d",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 3274.9105402663604,
+            "y": 548.48959802297
+          },
+          "nodeIndex": "ARPU Adjustment",
+          "nodeLineageTag": "834e07f0-489d-59dc-bfa8-3e783f6b4790",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 256.92089494599122,
+            "y": 182.03132032386065
+          },
+          "nodeIndex": "Date",
+          "nodeLineageTag": "58862071-17f7-52b4-bf59-8091ee0f10af",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 452.67547185831768,
+            "y": 743.27086484938263
+          },
+          "nodeIndex": "Dim_App",
+          "nodeLineageTag": "b44cb5df-7fd5-5a96-8541-510dab7c4948",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1336.7336520316303,
+            "y": 537.2945471180816
+          },
+          "nodeIndex": "Dim_ContentType",
+          "nodeLineageTag": "95dbe438-6f11-5c99-bd99-f9e87d6cb1e8",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2188.9105402663604,
+            "y": 534.48959802297
+          },
+          "nodeIndex": "Dim_MarketingRegion",
+          "nodeLineageTag": "38a969cf-db39-5bca-8caf-c059234f2016",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2756.9105402663604,
+            "y": 522.48959802297
+          },
+          "nodeIndex": "Dim_Region",
+          "nodeLineageTag": "64596975-5071-5542-bc2f-23e9911e8670",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 50,
+            "y": -1.4798535243651258
+          },
+          "nodeIndex": "Fact_AIReleaseShare",
+          "nodeLineageTag": "1ce9412d-4320-581c-ada8-322b9c2b5e1f",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 481.76338616631404,
+            "y": 537.83430130073452
+          },
+          "nodeIndex": "Fact_AppMonthly",
+          "nodeLineageTag": "f0a880fe-3b13-571b-ad27-2958c476728f",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 662.113413446467,
+            "y": 950.97919604593972
+          },
+          "nodeIndex": "Fact_AppScorecard",
+          "nodeLineageTag": "01b017ad-ec57-59f5-9c8f-9299e317363b",
+          "size": {
+            "height": 296,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 3558.9105402663604,
+            "y": 572.48959802297
+          },
+          "nodeIndex": "Fact_Audience",
+          "nodeLineageTag": "c7c0ecc9-ec0d-50ec-8dcd-46e38bc3cc3d",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 3842.9105402663604,
+            "y": 572.48959802297
+          },
+          "nodeIndex": "Fact_BenchmarkMix",
+          "nodeLineageTag": "c1db10fd-340a-5ca2-9c0e-5b1b9d9b72d7",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1620.9105402663604,
+            "y": 502.61953975051648
+          },
+          "nodeIndex": "Fact_ContentBenchmark",
+          "nodeLineageTag": "ca51ab6e-56ae-5ed4-866f-3f7c7d1715bc",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1052.5489008510003,
+            "y": 494.35965629542341
+          },
+          "nodeIndex": "Fact_ContentShare",
+          "nodeLineageTag": "f2a685f5-07d5-57a4-a157-5ede7e3d4201",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1904.9105402663604,
+            "y": 534.48959802297
+          },
+          "nodeIndex": "Fact_CostPerInstall",
+          "nodeLineageTag": "68530dca-b80f-544a-94d1-611cc119798f",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 4126.9105402663608,
+            "y": 560.48959802297
+          },
+          "nodeIndex": "Fact_FormatCost",
+          "nodeLineageTag": "f49e761b-276f-5d2b-9492-cdddd7aa8156",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 4410.9105402663608,
+            "y": 572.48959802297
+          },
+          "nodeIndex": "Fact_Genre",
+          "nodeLineageTag": "4feb1857-32a6-548e-b9c5-58be10756fb8",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 375.73931077813387,
+            "y": -50
+          },
+          "nodeIndex": "Fact_MarketQuarter",
+          "nodeLineageTag": "a4ada245-b1cf-518e-be1d-3d3431fbce7d",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 123.45666934111091,
+            "y": 536.32742563245267
+          },
+          "nodeIndex": "Fact_MarketSize",
+          "nodeLineageTag": "9493b003-4545-57b8-9493-16a24f307200",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 4694.9105402663608,
+            "y": 524.48959802297
+          },
+          "nodeIndex": "Fact_Operator",
+          "nodeLineageTag": "bcd6b877-a0d8-5cd3-a86d-4de0784c2dbd",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 372.15504943173278,
+            "y": 1026.1345059980476
+          },
+          "nodeIndex": "Fact_Paywall",
+          "nodeLineageTag": "7a29c6b2-976a-5a3e-8290-358c6a00fa1c",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 768.54890085100033,
+            "y": 722.71112850957672
+          },
+          "nodeIndex": "Fact_Pricing",
+          "nodeLineageTag": "a7a472cb-c4d8-52ed-aacc-8717803b0e10",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 2472.9105402663604,
+            "y": 498.48959802297
+          },
+          "nodeIndex": "Fact_RegionPerformance",
+          "nodeLineageTag": "cca26b12-06a6-5211-aa48-137f8de6965d",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 4978.9105402663608,
+            "y": 548.48959802297
+          },
+          "nodeIndex": "Production Cost",
+          "nodeLineageTag": "92287572-4935-50e4-a4cc-6a2c856484ba",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 5212.9105402663608,
+            "y": 572.48959802296986
+          },
+          "nodeIndex": "Fact_AppCountry",
+          "nodeLineageTag": "2fc75e0c-219d-5d26-a1a4-6e811ad3fab3",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 5496.9105402663608,
+            "y": 572.48959802296986
+          },
+          "nodeIndex": "Fact_ChinaAudience",
+          "nodeLineageTag": "96e5a333-a09b-54c0-9beb-4415388751d4",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 5780.9105402663608,
+            "y": 584.48959802296986
+          },
+          "nodeIndex": "Fact_ChinaComparison",
+          "nodeLineageTag": "0a455fb6-d285-5c32-abcd-9b716fc0fbfc",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 6064.9105402663608,
+            "y": 560.48959802296986
+          },
+          "nodeIndex": "Fact_ChinaMarket",
+          "nodeLineageTag": "72e20137-e481-5079-b42a-440242fb19d0",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 6348.9105402663608,
+            "y": 584.48959802296986
+          },
+          "nodeIndex": "Fact_ChinaUsers",
+          "nodeLineageTag": "456ef3e7-0d9f-5136-9047-0ea2955705ab",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 6632.9105402663608,
+            "y": 548.48959802296986
+          },
+          "nodeIndex": "Fact_ContinentPerformance",
+          "nodeLineageTag": "9a182b59-987f-5655-a9d4-e84ca9c181ee",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 6916.9105402663608,
+            "y": 584.48959802296986
+          },
+          "nodeIndex": "Fact_HongguoMAU",
+          "nodeLineageTag": "0784090b-2ab6-59a6-825e-2460408d1f72",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 7200.9105402663608,
+            "y": 584.48959802296986
+          },
+          "nodeIndex": "Fact_MenaGrowth",
+          "nodeLineageTag": "7e649c3e-73af-5045-a5d8-b4f69cfed0b7",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 7484.9105402663608,
+            "y": 572.48959802296986
+          },
+          "nodeIndex": "Fact_OverseasYear",
+          "nodeLineageTag": "0a32433e-5703-54da-9e20-d26f244cb853",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 7768.9105402663608,
+            "y": 572.48959802296986
+          },
+          "nodeIndex": "Fact_TitleDistribution",
+          "nodeLineageTag": "81cdee62-8e61-53d7-9a82-b84782957491",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 100,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

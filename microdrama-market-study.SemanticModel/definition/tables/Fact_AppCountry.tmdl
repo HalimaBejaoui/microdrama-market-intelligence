@@ -1,0 +1,41 @@
+/// In-app revenue by country group for the top three apps, 2025. DianDian.
+table Fact_AppCountry
+	lineageTag: 2fc75e0c-219d-5d26-a1a4-6e811ad3fab3
+
+	column App
+		dataType: string
+		lineageTag: 0d0c7b53-6e42-5189-a86b-57b79ea5bc5f
+		summarizeBy: none
+		sourceColumn: App
+
+		annotation SummarizationSetBy = User
+
+	column 'Country Group'
+		dataType: string
+		lineageTag: 91fab55e-49bb-5c1d-bba6-01c91cf08ea4
+		summarizeBy: none
+		sourceColumn: Country Group
+
+		annotation SummarizationSetBy = User
+
+	column 'Revenue USD M'
+		dataType: double
+		isHidden
+		lineageTag: 568bbff1-4e44-56e9-8a6b-8c1dc01caffe
+		summarizeBy: none
+		sourceColumn: Revenue USD M
+
+		annotation SummarizationSetBy = User
+
+	partition Fact_AppCountry = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "Fact_AppCountry.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"App", type text}, {"Country Group", type text}, {"Revenue USD M", type number}}, "en-US")
+				in
+				    Typed
+
+		annotation PBI_ResultType = Table
+

@@ -1,0 +1,40 @@
+/// Short-drama apps in the benchmark.
+table Dim_App
+	lineageTag: b44cb5df-7fd5-5a96-8541-510dab7c4948
+
+	column App
+		dataType: string
+		lineageTag: 6648c2cf-9372-5cb5-a30b-056a9dc06a47
+		summarizeBy: none
+		sourceColumn: App
+
+		annotation SummarizationSetBy = User
+
+	column Parent
+		dataType: string
+		lineageTag: f6acc997-ff0c-5b71-8004-29d2c731f08a
+		summarizeBy: none
+		sourceColumn: Parent
+
+		annotation SummarizationSetBy = User
+
+	column 'Content Model'
+		dataType: string
+		lineageTag: 0e54f94c-eea7-59f9-98d5-2d3651a35570
+		summarizeBy: none
+		sourceColumn: Content Model
+
+		annotation SummarizationSetBy = User
+
+	partition Dim_App = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "Dim_App.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"App", type text}, {"Parent", type text}, {"Content Model", type text}}, "en-US")
+				in
+				    Typed
+
+		annotation PBI_ResultType = Table
+

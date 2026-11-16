@@ -1,0 +1,34 @@
+/// Regions for which a cost per install benchmark exists.
+table Dim_MarketingRegion
+	lineageTag: 38a969cf-db39-5bca-8caf-c059234f2016
+
+	column 'Marketing Region'
+		dataType: string
+		lineageTag: 223a0b5e-c220-5166-8683-6cbbe3fa4647
+		summarizeBy: none
+		sourceColumn: Marketing Region
+		sortByColumn: 'Marketing Region Order'
+
+		annotation SummarizationSetBy = User
+
+	column 'Marketing Region Order'
+		dataType: int64
+		isHidden
+		lineageTag: 2ffb75cf-e9e7-5255-8b07-163da251a3ae
+		summarizeBy: none
+		sourceColumn: Marketing Region Order
+
+		annotation SummarizationSetBy = User
+
+	partition Dim_MarketingRegion = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "Dim_MarketingRegion.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"Marketing Region", type text}, {"Marketing Region Order", Int64.Type}}, "en-US")
+				in
+				    Typed
+
+		annotation PBI_ResultType = Table
+

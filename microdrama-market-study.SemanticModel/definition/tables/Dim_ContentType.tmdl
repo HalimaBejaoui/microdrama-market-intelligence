@@ -1,0 +1,24 @@
+/// Locally made or dubbed content.
+table Dim_ContentType
+	lineageTag: 95dbe438-6f11-5c99-bd99-f9e87d6cb1e8
+
+	column 'Content Type'
+		dataType: string
+		lineageTag: 0a868412-27ba-57a1-8d07-aec40386e4de
+		summarizeBy: none
+		sourceColumn: Content Type
+
+		annotation SummarizationSetBy = User
+
+	partition Dim_ContentType = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "Dim_ContentType.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"Content Type", type text}}, "en-US")
+				in
+				    Typed
+
+		annotation PBI_ResultType = Table
+

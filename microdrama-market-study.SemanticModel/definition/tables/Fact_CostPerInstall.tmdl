@@ -1,0 +1,34 @@
+/// Average cost per install by marketing region, 2025. DianDian.
+table Fact_CostPerInstall
+	lineageTag: 68530dca-b80f-544a-94d1-611cc119798f
+
+	column 'Marketing Region'
+		dataType: string
+		isHidden
+		lineageTag: 697d6d9f-6180-5d82-a793-7123f654c714
+		summarizeBy: none
+		sourceColumn: Marketing Region
+
+		annotation SummarizationSetBy = User
+
+	column 'CPI USD'
+		dataType: double
+		isHidden
+		lineageTag: ac1590c3-9843-5221-aa42-a07d03573ba1
+		summarizeBy: none
+		sourceColumn: CPI USD
+
+		annotation SummarizationSetBy = User
+
+	partition Fact_CostPerInstall = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "Fact_CostPerInstall.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"Marketing Region", type text}, {"CPI USD", type number}}, "en-US")
+				in
+				    Typed
+
+		annotation PBI_ResultType = Table
+

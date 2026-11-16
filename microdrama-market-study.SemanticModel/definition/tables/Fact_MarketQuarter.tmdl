@@ -1,0 +1,53 @@
+/// Global App Store and Google Play in-app revenue and downloads by quarter. Sensor Tower. Excludes ads, web payments and third-party Android stores.
+table Fact_MarketQuarter
+	lineageTag: a4ada245-b1cf-518e-be1d-3d3431fbce7d
+
+	column Date
+		dataType: dateTime
+		isHidden
+		formatString: yyyy-mm-dd
+		lineageTag: c5f15efd-13a4-5cb6-8095-e21ddec29725
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = User
+
+	column 'IAP Revenue USD M'
+		dataType: double
+		isHidden
+		lineageTag: 63b962e2-3736-559c-b161-92427f5a17f5
+		summarizeBy: none
+		sourceColumn: IAP Revenue USD M
+
+		annotation SummarizationSetBy = User
+
+	column 'Downloads M'
+		dataType: double
+		isHidden
+		lineageTag: 5a6b9e18-a5e0-52b9-9f79-9825d25dde89
+		summarizeBy: none
+		sourceColumn: Downloads M
+
+		annotation SummarizationSetBy = User
+
+	column Basis
+		dataType: string
+		isHidden
+		lineageTag: 24319c44-df06-5891-9b2d-49fcc15d2cb0
+		summarizeBy: none
+		sourceColumn: Basis
+
+		annotation SummarizationSetBy = User
+
+	partition Fact_MarketQuarter = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "Fact_MarketQuarter.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"Date", type date}, {"IAP Revenue USD M", type number}, {"Downloads M", type number}, {"Basis", type text}}, "en-US")
+				in
+				    Typed
+
+		annotation PBI_ResultType = Table
+

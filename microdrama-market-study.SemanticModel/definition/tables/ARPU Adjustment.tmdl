@@ -1,0 +1,17 @@
+/// What-if values for the ARPU adjustment, in percent.
+table 'ARPU Adjustment'
+	lineageTag: 834e07f0-489d-59dc-bfa8-3e783f6b4790
+
+	column 'ARPU Adjustment'
+		dataType: int64
+		formatString: 0"%"
+		lineageTag: 1f74dfcd-1b9e-547e-9dca-c809e36b4384
+		summarizeBy: none
+		sourceColumn: [Value]
+
+		annotation SummarizationSetBy = User
+
+	partition 'ARPU Adjustment' = calculated
+		mode: import
+		source = GENERATESERIES ( -30, 30, 10 )
+

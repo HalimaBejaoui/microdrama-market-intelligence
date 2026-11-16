@@ -1,0 +1,10 @@
+Mix,Item,Value
+Cost Structure,Marketing,0.5
+Cost Structure,Content production,0.2
+Cost Structure,Channel fees,0.2
+Cost Structure,Other operations,0.1
+Ad Channel,Meta,0.65
+Ad Channel,Google,0.2
+Ad Channel,TikTok,0.1
+Ad Channel,Other,0.05
+AI Production Saving,Midpoint of 80-90%,0.85

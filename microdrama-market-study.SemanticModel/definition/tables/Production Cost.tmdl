@@ -1,0 +1,17 @@
+/// What-if values for production cost per series.
+table 'Production Cost'
+	lineageTag: 92287572-4935-50e4-a4cc-6a2c856484ba
+
+	column 'Production Cost'
+		dataType: int64
+		formatString: \$#,0
+		lineageTag: 71ea8cc3-2b13-5c90-9ba8-722e2896af92
+		summarizeBy: none
+		sourceColumn: [Value]
+
+		annotation SummarizationSetBy = User
+
+	partition 'Production Cost' = calculated
+		mode: import
+		source = GENERATESERIES ( 0, 250000, 5000 )
+

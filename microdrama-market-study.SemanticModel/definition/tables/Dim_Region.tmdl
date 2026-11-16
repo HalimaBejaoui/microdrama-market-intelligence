@@ -1,0 +1,42 @@
+/// Sensor Tower markets, each mapped to the marketing region that carries a cost per install.
+table Dim_Region
+	lineageTag: 64596975-5071-5542-bc2f-23e9911e8670
+
+	column Region
+		dataType: string
+		lineageTag: af0249fd-2570-5b53-b1ed-bbc9828c072a
+		summarizeBy: none
+		sourceColumn: Region
+		sortByColumn: 'Region Order'
+
+		annotation SummarizationSetBy = User
+
+	column 'Marketing Region'
+		dataType: string
+		lineageTag: f92e8e2f-cb56-5fd7-9d08-75b595287ce8
+		summarizeBy: none
+		sourceColumn: Marketing Region
+
+		annotation SummarizationSetBy = User
+
+	column 'Region Order'
+		dataType: int64
+		isHidden
+		lineageTag: 78e543ad-b55a-5512-a9a2-001faac97371
+		summarizeBy: none
+		sourceColumn: Region Order
+
+		annotation SummarizationSetBy = User
+
+	partition Dim_Region = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "Dim_Region.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"Region", type text}, {"Marketing Region", type text}, {"Region Order", Int64.Type}}, "en-US")
+				in
+				    Typed
+
+		annotation PBI_ResultType = Table
+

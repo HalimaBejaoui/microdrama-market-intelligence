@@ -1,0 +1,42 @@
+/// Overseas downloads and in-app revenue by year, 2023 to 2025. DianDian.
+table Fact_OverseasYear
+	lineageTag: 0a32433e-5703-54da-9e20-d26f244cb853
+
+	column Year
+		dataType: string
+		lineageTag: fd2222c4-02b1-55ee-b693-7c3324caabaf
+		summarizeBy: none
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = User
+
+	column 'Downloads M'
+		dataType: double
+		isHidden
+		lineageTag: 5141dea9-5063-5c8d-9769-a0f1d8b419ed
+		summarizeBy: none
+		sourceColumn: Downloads M
+
+		annotation SummarizationSetBy = User
+
+	column 'Revenue USD M'
+		dataType: double
+		isHidden
+		lineageTag: d217f954-0cee-5b91-8826-c483cb2fea69
+		summarizeBy: none
+		sourceColumn: Revenue USD M
+
+		annotation SummarizationSetBy = User
+
+	partition Fact_OverseasYear = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "Fact_OverseasYear.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"Year", type text}, {"Downloads M", type number}, {"Revenue USD M", type number}}, "en-US")
+				in
+				    Typed
+
+		annotation PBI_ResultType = Table
+

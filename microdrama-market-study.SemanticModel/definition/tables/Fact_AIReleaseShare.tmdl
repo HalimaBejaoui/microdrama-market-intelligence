@@ -1,0 +1,35 @@
+/// AI share of new overseas releases by quarter, 2026. Owl & Co.
+table Fact_AIReleaseShare
+	lineageTag: 1ce9412d-4320-581c-ada8-322b9c2b5e1f
+
+	column Date
+		dataType: dateTime
+		isHidden
+		formatString: yyyy-mm-dd
+		lineageTag: c8ad8e7b-cc07-50c7-af74-ba3020aaaa75
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = User
+
+	column 'AI Share'
+		dataType: double
+		isHidden
+		lineageTag: d67f5e4e-cd05-5ac6-b5c7-9a08a83a41f1
+		summarizeBy: none
+		sourceColumn: AI Share
+
+		annotation SummarizationSetBy = User
+
+	partition Fact_AIReleaseShare = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "Fact_AIReleaseShare.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"Date", type date}, {"AI Share", type number}}, "en-US")
+				in
+				    Typed
+
+		annotation PBI_ResultType = Table
+

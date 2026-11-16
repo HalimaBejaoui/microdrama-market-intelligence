@@ -1,0 +1,42 @@
+/// Share of overseas titles by content type. DianDian; 2026F is a forecast.
+table Fact_ContentShare
+	lineageTag: f2a685f5-07d5-57a4-a157-5ede7e3d4201
+
+	column Period
+		dataType: string
+		lineageTag: 8937a557-21c4-54eb-a5ba-262f49761657
+		summarizeBy: none
+		sourceColumn: Period
+
+		annotation SummarizationSetBy = User
+
+	column 'Content Type'
+		dataType: string
+		isHidden
+		lineageTag: e8edc90c-5e44-5754-a267-1b1a13435be9
+		summarizeBy: none
+		sourceColumn: Content Type
+
+		annotation SummarizationSetBy = User
+
+	column Share
+		dataType: double
+		isHidden
+		lineageTag: bd41e732-164c-5e27-aeb5-4569332afdea
+		summarizeBy: none
+		sourceColumn: Share
+
+		annotation SummarizationSetBy = User
+
+	partition Fact_ContentShare = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "Fact_ContentShare.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"Period", type text}, {"Content Type", type text}, {"Share", type number}}, "en-US")
+				in
+				    Typed
+
+		annotation PBI_ResultType = Table
+

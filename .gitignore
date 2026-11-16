@@ -1,0 +1,10 @@
+PLAN.md
+VIDEO_PLAN.md
+media/
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
+.env
+*.env
+__pycache__/
+.venv/
+tools/

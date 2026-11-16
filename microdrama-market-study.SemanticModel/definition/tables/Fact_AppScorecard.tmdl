@@ -1,0 +1,97 @@
+/// One row per app. FY2025 from DianDian, Q1 2026 from Sensor Tower chart reads, revenue mix from Sensor Tower.
+table Fact_AppScorecard
+	lineageTag: 01b017ad-ec57-59f5-9c8f-9299e317363b
+
+	column App
+		dataType: string
+		isHidden
+		lineageTag: b76d6480-7923-5d05-bf60-b33ff0be4fa2
+		summarizeBy: none
+		sourceColumn: App
+
+		annotation SummarizationSetBy = User
+
+	column 'Revenue 2025 USD M'
+		dataType: double
+		isHidden
+		lineageTag: 06487287-90c7-5341-8628-1d7816639f15
+		summarizeBy: none
+		sourceColumn: Revenue 2025 USD M
+
+		annotation SummarizationSetBy = User
+
+	column 'Downloads 2025 M'
+		dataType: double
+		isHidden
+		lineageTag: 396fa436-c7f7-56bb-86da-0632dae33d1f
+		summarizeBy: none
+		sourceColumn: Downloads 2025 M
+
+		annotation SummarizationSetBy = User
+
+	column 'Avg MAU 2025 M'
+		dataType: double
+		isHidden
+		lineageTag: 29281314-db62-56ca-ac88-87bb8357a00b
+		summarizeBy: none
+		sourceColumn: Avg MAU 2025 M
+
+		annotation SummarizationSetBy = User
+
+	column 'Revenue Q1 2026 USD M'
+		dataType: double
+		isHidden
+		lineageTag: 7dc7c71e-2cb3-5ff5-85fd-a17e1a2c7bbf
+		summarizeBy: none
+		sourceColumn: Revenue Q1 2026 USD M
+
+		annotation SummarizationSetBy = User
+
+	column 'Revenue QoQ'
+		dataType: double
+		isHidden
+		lineageTag: 26257d07-de70-5476-b09b-048dd3fa7284
+		summarizeBy: none
+		sourceColumn: Revenue QoQ
+
+		annotation SummarizationSetBy = User
+
+	column 'IAP Share'
+		dataType: double
+		isHidden
+		lineageTag: e99f5b85-6448-5842-9d66-16305ccab2a2
+		summarizeBy: none
+		sourceColumn: IAP Share
+
+		annotation SummarizationSetBy = User
+
+	column 'Ad Share'
+		dataType: double
+		isHidden
+		lineageTag: f67b008b-407e-54c8-8d5a-4e6a7d53c827
+		summarizeBy: none
+		sourceColumn: Ad Share
+
+		annotation SummarizationSetBy = User
+
+	column 'US Revenue 2025 USD M'
+		dataType: double
+		isHidden
+		lineageTag: 77ee7442-b920-5279-bf77-3d7211b058b5
+		summarizeBy: none
+		sourceColumn: US Revenue 2025 USD M
+
+		annotation SummarizationSetBy = User
+
+	partition Fact_AppScorecard = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "Fact_AppScorecard.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"App", type text}, {"Revenue 2025 USD M", type number}, {"Downloads 2025 M", type number}, {"Avg MAU 2025 M", type number}, {"Revenue Q1 2026 USD M", type number}, {"Revenue QoQ", type number}, {"IAP Share", type number}, {"Ad Share", type number}, {"US Revenue 2025 USD M", type number}}, "en-US")
+				in
+				    Typed
+
+		annotation PBI_ResultType = Table
+

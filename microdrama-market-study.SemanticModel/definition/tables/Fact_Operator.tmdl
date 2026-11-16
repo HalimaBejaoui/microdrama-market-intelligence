@@ -1,0 +1,76 @@
+/// Operator financials, FY2025, USD million at 7.2 CNY per USD. Market cap as of 2026-11-08.
+table Fact_Operator
+	lineageTag: bcd6b877-a0d8-5cd3-a86d-4de0784c2dbd
+
+	column Company
+		dataType: string
+		lineageTag: 891ca8aa-d222-5d4a-9e32-06d60e52a5b3
+		summarizeBy: none
+		sourceColumn: Company
+
+		annotation SummarizationSetBy = User
+
+	column 'Main Apps'
+		dataType: string
+		lineageTag: 7e2a8845-f7d2-544c-95f2-f7822e034db7
+		summarizeBy: none
+		sourceColumn: Main Apps
+
+		annotation SummarizationSetBy = User
+
+	column 'Revenue USD M'
+		dataType: double
+		isHidden
+		lineageTag: 5330eee2-f634-5b37-8c60-6c1ea20ef9a1
+		summarizeBy: none
+		sourceColumn: Revenue USD M
+
+		annotation SummarizationSetBy = User
+
+	column 'Net Profit USD M'
+		dataType: double
+		isHidden
+		lineageTag: a03d4783-eaa5-5cf8-bed4-f845c10bd364
+		summarizeBy: none
+		sourceColumn: Net Profit USD M
+
+		annotation SummarizationSetBy = User
+
+	column 'Marketing Share'
+		dataType: double
+		isHidden
+		lineageTag: ac729903-b707-556f-8918-dfdebcfb2481
+		summarizeBy: none
+		sourceColumn: Marketing Share
+
+		annotation SummarizationSetBy = User
+
+	column 'Market Cap USD M'
+		dataType: double
+		isHidden
+		lineageTag: 8c73ada0-9bb4-5016-8db2-a4a8cff68bc9
+		summarizeBy: none
+		sourceColumn: Market Cap USD M
+
+		annotation SummarizationSetBy = User
+
+	column Basis
+		dataType: string
+		lineageTag: 0fd24af4-5962-54e1-9ff9-58640e21c2e7
+		summarizeBy: none
+		sourceColumn: Basis
+
+		annotation SummarizationSetBy = User
+
+	partition Fact_Operator = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "Fact_Operator.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"Company", type text}, {"Main Apps", type text}, {"Revenue USD M", type number}, {"Net Profit USD M", type number}, {"Marketing Share", type number}, {"Market Cap USD M", type number}, {"Basis", type text}}, "en-US")
+				in
+				    Typed
+
+		annotation PBI_ResultType = Table
+

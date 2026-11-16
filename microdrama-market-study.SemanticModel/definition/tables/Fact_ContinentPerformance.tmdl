@@ -1,0 +1,60 @@
+/// Overseas downloads and in-app revenue by continent, 2025. DianDian. Excludes ads.
+table Fact_ContinentPerformance
+	lineageTag: 9a182b59-987f-5655-a9d4-e84ca9c181ee
+
+	column Continent
+		dataType: string
+		lineageTag: 4745f9db-6c9a-5195-9755-99377ac27f40
+		summarizeBy: none
+		sourceColumn: Continent
+
+		annotation SummarizationSetBy = User
+
+	column 'Downloads M'
+		dataType: double
+		isHidden
+		lineageTag: d31aafa5-3185-53f2-a390-cbe59fcc2b26
+		summarizeBy: none
+		sourceColumn: Downloads M
+
+		annotation SummarizationSetBy = User
+
+	column 'Revenue USD M'
+		dataType: double
+		isHidden
+		lineageTag: 36d76a83-3c84-576a-a548-6751cebb9971
+		summarizeBy: none
+		sourceColumn: Revenue USD M
+
+		annotation SummarizationSetBy = User
+
+	column 'Download Share'
+		dataType: double
+		isHidden
+		lineageTag: 24ca4056-f8e4-5b6e-9a14-3c82d5fa8fbd
+		summarizeBy: none
+		sourceColumn: Download Share
+
+		annotation SummarizationSetBy = User
+
+	column 'Revenue Share'
+		dataType: double
+		isHidden
+		lineageTag: 30d0bc6c-2d62-52ce-b5d0-02b23d62ac7b
+		summarizeBy: none
+		sourceColumn: Revenue Share
+
+		annotation SummarizationSetBy = User
+
+	partition Fact_ContinentPerformance = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "Fact_ContinentPerformance.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"Continent", type text}, {"Downloads M", type number}, {"Revenue USD M", type number}, {"Download Share", type number}, {"Revenue Share", type number}}, "en-US")
+				in
+				    Typed
+
+		annotation PBI_ResultType = Table
+

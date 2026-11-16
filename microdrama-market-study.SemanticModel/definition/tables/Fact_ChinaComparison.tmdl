@@ -1,0 +1,33 @@
+/// China microdrama market against China film box office, 2025, USD billion. DataEye.
+table Fact_ChinaComparison
+	lineageTag: 0a455fb6-d285-5c32-abcd-9b716fc0fbfc
+
+	column Item
+		dataType: string
+		lineageTag: 7148d2c4-0ba4-5335-918f-b7781d0b647f
+		summarizeBy: none
+		sourceColumn: Item
+
+		annotation SummarizationSetBy = User
+
+	column 'USD B'
+		dataType: double
+		isHidden
+		lineageTag: 807615b1-f4a0-5dae-91e4-28eb8e23de3d
+		summarizeBy: none
+		sourceColumn: USD B
+
+		annotation SummarizationSetBy = User
+
+	partition Fact_ChinaComparison = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "Fact_ChinaComparison.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"Item", type text}, {"USD B", type number}}, "en-US")
+				in
+				    Typed
+
+		annotation PBI_ResultType = Table
+

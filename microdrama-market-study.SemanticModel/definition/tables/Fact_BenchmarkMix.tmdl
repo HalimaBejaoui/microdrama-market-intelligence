@@ -1,0 +1,42 @@
+/// Benchmark shares: overseas platform cost structure, ad channel split and AI production saving. DianDian, 2025.
+table Fact_BenchmarkMix
+	lineageTag: c1db10fd-340a-5ca2-9c0e-5b1b9d9b72d7
+
+	column Mix
+		dataType: string
+		isHidden
+		lineageTag: 7cc3b65a-631a-5930-a386-6aea804ff404
+		summarizeBy: none
+		sourceColumn: Mix
+
+		annotation SummarizationSetBy = User
+
+	column Item
+		dataType: string
+		lineageTag: 49faf3a9-7999-572f-8a53-d166be331541
+		summarizeBy: none
+		sourceColumn: Item
+
+		annotation SummarizationSetBy = User
+
+	column Value
+		dataType: double
+		isHidden
+		lineageTag: 8ab8c29a-6521-504d-b496-afe3a9ad5929
+		summarizeBy: none
+		sourceColumn: Value
+
+		annotation SummarizationSetBy = User
+
+	partition Fact_BenchmarkMix = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "Fact_BenchmarkMix.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"Mix", type text}, {"Item", type text}, {"Value", type number}}, "en-US")
+				in
+				    Typed
+
+		annotation PBI_ResultType = Table
+

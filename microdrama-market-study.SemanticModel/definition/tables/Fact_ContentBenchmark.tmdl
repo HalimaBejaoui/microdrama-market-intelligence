@@ -1,0 +1,60 @@
+/// Locally made versus dubbed performance ranges. DianDian, compiled range with no stated method.
+table Fact_ContentBenchmark
+	lineageTag: ca51ab6e-56ae-5ed4-866f-3f7c7d1715bc
+
+	column 'Content Type'
+		dataType: string
+		isHidden
+		lineageTag: dfa62275-4fc0-58fa-a29f-4df65fba673c
+		summarizeBy: none
+		sourceColumn: Content Type
+
+		annotation SummarizationSetBy = User
+
+	column Metric
+		dataType: string
+		lineageTag: b1b3e88e-4b8d-52b1-af00-cf3b49f953c7
+		summarizeBy: none
+		sourceColumn: Metric
+
+		annotation SummarizationSetBy = User
+
+	column Unit
+		dataType: string
+		isHidden
+		lineageTag: 7f3a0127-2366-5a44-bec4-78b7c38f4287
+		summarizeBy: none
+		sourceColumn: Unit
+
+		annotation SummarizationSetBy = User
+
+	column Low
+		dataType: double
+		isHidden
+		lineageTag: 488595d8-767c-5c2d-b644-e97d3c6fea6e
+		summarizeBy: none
+		sourceColumn: Low
+
+		annotation SummarizationSetBy = User
+
+	column High
+		dataType: double
+		isHidden
+		lineageTag: 3c671533-7ff0-5c76-807e-11fa3a9e26e2
+		summarizeBy: none
+		sourceColumn: High
+
+		annotation SummarizationSetBy = User
+
+	partition Fact_ContentBenchmark = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "Fact_ContentBenchmark.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"Content Type", type text}, {"Metric", type text}, {"Unit", type text}, {"Low", type number}, {"High", type number}}, "en-US")
+				in
+				    Typed
+
+		annotation PBI_ResultType = Table
+
